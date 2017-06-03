@@ -192,9 +192,6 @@ var m4_getType = '0';//對象
 var m4_getD_1 = '10';//甜度
 var m4_getD_2 = '5';//冰塊
 var m4_getD_3 = '1';//珍珠
-var m4_swPeopleTimes_0 = 0;//小孩
-var m4_swPeopleTimes_1 = 0;//年輕人
-var m4_swPeopleTimes_2 = 0;//成年人
 var	m4_next_level_a = false;
 var	m4_next_level_b = false;	
 
@@ -314,28 +311,6 @@ $(function() {
 
 //開始調製
 function m4_begin_make(){
-	if(m4_getType == '0'){
-		if( m4_swPeopleTimes_0 == '5' ){
-			return;
-		}else{
-			m4_swPeopleTimes_0++;
-		}
-	}
-	if(m4_getType == '1'){
-		if( m4_swPeopleTimes_1 == '5' ){
-			return;		
-		}else{
-			m4_swPeopleTimes_1++;
-		}
-	}
-	if(m4_getType == '2'){
-		if( m4_swPeopleTimes_2 == '5' ){
-			return;		
-		}else{
-			m4_swPeopleTimes_2++;
-		}
-	}
-	
 	
 	var sendData = { };
 		sendData.room_id = roomID;
