@@ -527,7 +527,7 @@ if( m3_left_0 > '' && m3_right_0 > '' )
 		//紀錄閱卷資料 end		
 	}
 	if(m3_left_0 == 'sugar' && m3_right_0 == '30'){
-		var htmlDsc = '<tr><td><input type="text" value="30g糖 + 90g冰塊"/></td><td>降低溫度<input type="text" class="tmp" value="<?php echo isset($model_data['modelData_3']['rule_1_A'][3])?$model_data['modelData_3']['rule_1_A'][3]:''; ?>" title="tmp" disabled />度</td></tr>';
+		var htmlDsc = '<tr><td><input type="text" value="30g糖 + 30g冰塊"/></td><td>降低溫度<input type="text" class="tmp" value="<?php echo isset($model_data['modelData_3']['rule_1_A'][3])?$model_data['modelData_3']['rule_1_A'][3]:''; ?>" title="tmp" disabled />度</td></tr>';
 		
 		$('#m3_result_area').append(htmlDsc);
 		var countTmp = m3_baseTmp - <?php echo isset($model_data['modelData_3']['rule_1_A'][3])?$model_data['modelData_3']['rule_1_A'][3]:'0'; ?>;
