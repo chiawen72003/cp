@@ -41,7 +41,9 @@ if(isset($listData) and count($listData) > 0){
 				<td width="10%"><?php echo isset($studentData[$tempArray['student_num']])?$studentData[$tempArray['student_num']]['student_id']:'';?></td>
 				<td width="20%"><?php echo isset($quationsData[$tempArray['questions_num']])?$quationsData[$tempArray['questions_num']]['title_dsc']:'';?></td>
 				<td width="20%"><?php echo $tempArray['up_date'];?></td>
-				<td width="25%"><a class="button" title="" href="<?php echo  site_url("recordlist/recordPG/");?>?num=<?php echo $tempArray['questions_num'];?>&r_num=<?php echo $tempArray['num'];?>&u_type=<?php echo $tempArray['student_type'];?>">觀看紀錄</a>
+				<td width="25%">
+                    <a class="button" title="" href="<?php echo  site_url("recordlist/recordPG/");?>?num=<?php echo $tempArray['questions_num'];?>&r_num=<?php echo $tempArray['num'];?>&u_type=<?php echo $tempArray['student_type'];?>">觀看紀錄</a>
+                    <a class="button" title="" href="#" onclick="OutExcel('<?php echo $tempArray['num'];?>','<?php echo $tempArray['questions_num'];?>')">下載操作紀錄</a>
 				</td>
             </tr>
         </table>             
@@ -108,5 +110,10 @@ function chagneTeacher(getID){
 			location.href='<?php echo  site_url('recordlist/'); ?>';
 		}
 	});
+}
+
+//產生excel
+function OutExcel(getNum,getQNum){
+    window.open('<?php echo  site_url('recordlist/getExcel'); ?>?num='+getNum+'&qnum='+getQNum);
 }
 </script>
