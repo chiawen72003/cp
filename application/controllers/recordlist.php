@@ -161,5 +161,52 @@ class Recordlist extends CI_Controller {
 			$this->recordlist_model->chg_Teacher($num);
 		}
 	}
-		
+
+    /**
+     * 輸出操作紀錄成excel
+     */
+    public function getExcel()
+    {
+        $record_num = $this->input->get('num');//option_record的num
+        $questions_num = $this->input->get('qnum');
+        $whereArray = array(
+            'num' => $record_num,
+            'questions_num' => $questions_num,
+        );
+        $record_data = $this->recordlist_model->getListData($whereArray);
+        if(is_array($record_data))
+        {
+            foreach ($record_data as $data)
+            {
+                $record_data = json_decode($data['record_value'], true);
+            }
+        }
+
+        // Starting the PHPExcel library
+        $this->load->library('PHPExcel');
+        $this->load->library('PHPExcel/IOFactory');
+
+        $objPHPExcel = new PHPExcel();
+        $objPHPExcel->getProperties()->setTitle("export")->setDescription("none");
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->setCellValue('A1', 'roomId');
+        $objPHPExcel->getActiveSheet()->setCellValue('B1', 'userType');
+        $objPHPExcel->getActiveSheet()->setCellValue('C1', 'userName');
+        $objPHPExcel->getActiveSheet()->setCellValue('D1', 'dataType');
+        $objPHPExcel->getActiveSheet()->setCellValue('E1', 'dataType_Dsc');
+        $objPHPExcel->getActiveSheet()->setCellValue('F1', 'dataFunction');
+        $objPHPExcel->getActiveSheet()->setCellValue('G1', 'dataFunction_ObjID');
+        $objPHPExcel->getActiveSheet()->setCellValue('H1', 'dataFunction_Value');
+        $objPHPExcel->getActiveSheet()->fromArray($record_data, null, 'A2');//將資料以陣列方式填入excel
+        $objPHPExcel->setActiveSheetIndex(0);
+
+        $objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
+        date_default_timezone_set('Asia/Taipei');
+        // Sending headers to force the user to download the file
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="操作紀錄.xls"');
+        header('Cache-Control: max-age=0');
+        $objWriter->save('php://output');
+
+    }
 }
