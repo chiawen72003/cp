@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="CommandHandlerBase.php" server="C:/xampp/htdocs/sheerjoy/" local="129072295360000000" remote="129072295360000000" Dst="0" />
+<file name="CreateFolder.php" server="C:/xampp/htdocs/sheerjoy/" local="129107766960000000" remote="129107766960000000" Dst="0" />
+<file name="DeleteFile.php" server="C:/xampp/htdocs/sheerjoy/" local="129072295400000000" remote="129072295400000000" Dst="0" />
+<file name="DeleteFolder.php" server="C:/xampp/htdocs/sheerjoy/" local="129072295380000000" remote="129072295380000000" Dst="0" />
+<file name="DownloadFile.php" server="C:/xampp/htdocs/sheerjoy/" local="129072295380000000" remote="129072295380000000" Dst="0" />
+<file name="FileUpload.php" server="C:/xampp/htdocs/sheerjoy/" local="129165625510000000" remote="129165625510000000" Dst="0" />
+<file name="GetFiles.php" server="C:/xampp/htdocs/sheerjoy/" local="129072295360000000" remote="129072295360000000" Dst="0" />
+<file name="GetFolders.php" server="C:/xampp/htdocs/sheerjoy/" local="129072295360000000" remote="129072295360000000" Dst="0" />
+<file name="Init.php" server="C:/xampp/htdocs/sheerjoy/" local="129072295380000000" remote="129072295380000000" Dst="0" />
+<file name="QuickUpload.php" server="C:/xampp/htdocs/sheerjoy/" local="129072295380000000" remote="129072295380000000" Dst="0" />
+<file name="RenameFile.php" server="C:/xampp/htdocs/sheerjoy/" local="129107765060000000" remote="129107765060000000" Dst="0" />
+<file name="RenameFolder.php" server="C:/xampp/htdocs/sheerjoy/" local="129107760560000000" remote="129107760560000000" Dst="0" />
+<file name="Thumbnail.php" server="C:/xampp/htdocs/sheerjoy/" local="129072295400000000" remote="129072295400000000" Dst="0" />
+<file name="XmlCommandHandlerBase.php" server="C:/xampp/htdocs/sheerjoy/" local="129072295380000000" remote="129072295380000000" Dst="0" />
+</dwsync>

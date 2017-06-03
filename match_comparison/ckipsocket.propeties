@@ -1,0 +1,6 @@
+host=210.240.189.1
+port=1501
+user=_tester
+pass=tester
+overwrite=true
+charsetcode=big5
