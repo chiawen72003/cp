@@ -138,6 +138,8 @@ function sendMSG(){
 			}		
 		}
 		$('#msgInput').val('');
+        $("#chatRoom").scrollTop(9999);
+
 	}
 }
 
@@ -148,7 +150,7 @@ function web_friendLogin(){
 	//var tempData = $('#chatRoom').val();
 	var htmlDsc = '<div class="tak-2">同伴<?php echo ($model_data['userType'] == 'A')?'B':'A'; ?>登入遊戲</div>';
 	$('#chatRoom').append(htmlDsc);
-	
+    $("#chatRoom").scrollTop(9999);
 	//檢查雙方的模組是否一致
 	var sendTalkData = { };
 		sendTalkData.room_id = roomID;
@@ -165,6 +167,7 @@ function web_friendLogin(){
 function web_friendIsInRoom(){	
 	var htmlDsc = '<div class="tak-2">同伴<?php echo ($model_data['userType'] == 'A')?'B':'A'; ?>登入遊戲</div>';
 	$('#chatRoom').append(htmlDsc);
+    $("#chatRoom").scrollTop(9999);
 }
 
 //對方檢查模組是否一樣
@@ -195,6 +198,7 @@ function web_friendLogout(){
 	var tempData = $('#chatRoom').val();
 	var htmlDsc = '<div class="tak-2">同伴<?php echo ($model_data['userType'] == 'A')?'B':'A'; ?>登出遊戲</div>'+tempData;
 	$('#chatRoom').append(htmlDsc);
+    $("#chatRoom").scrollTop(9999);
 }
 
 //收到夥伴傳來的訊息
@@ -203,6 +207,7 @@ function web_setMSG(){
 	var get_msg = getWebValue['talk_msg'];
 	var htmlDsc = '<div class="tak-2">'+get_msg+':夥伴</div>';
 	$('#chatRoom').append(htmlDsc);
+    $("#chatRoom").scrollTop(9999);
 	
 	if(!isView){
 		//紀錄動作
