@@ -118,9 +118,12 @@ class Modellist extends CI_Controller {
 		if( $switch_mod == 'm4' ){	
 			$this->layout->view('modellist/editpg_m4',$data);
 		}
-		if( $switch_mod == 'm5' ){	
-			$this->layout->view('modellist/editpg_m5',$data);
-		}
+        if( $switch_mod == 'm5' ){
+            $this->layout->view('modellist/editpg_m5',$data);
+        }
+        if( $switch_mod == 'm6' ){
+            $this->layout->view('modellist/editpg_m6',$data);
+        }
 	}
 
 	public function editModel_Page(){
@@ -174,7 +177,12 @@ class Modellist extends CI_Controller {
 				
 				$this->layout->view('modellist/editpg_m5',$data);
 			}
-			
+            if(isset($data['dataList']['module_type']) and $data['dataList']['module_type'] == 'm6'){
+                $data['modelsData'] = $data['dataList']['modulesData'];
+                $data['levelDsc'] = $this->modellist_model->getLevelData('m6',$getID);//關卡敘述
+
+                $this->layout->view('modellist/editpg_m6',$data);
+            }
 		}	
 	}
 	
