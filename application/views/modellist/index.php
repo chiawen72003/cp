@@ -57,8 +57,11 @@ echo $pagination;
 			<a class="button" title="最佳銷售組合遊戲模組" href="<?php echo  site_url('modellist/addModel_Page')."?mod=m4"; ?>">最佳銷售組合遊戲模組</a>
 		</li>
         <li>
-			<a class="button" title="數學渡河邏輯遊戲模組" href="<?php echo  site_url('modellist/addModel_Page')."?mod=m5"; ?>">數學渡河邏輯遊戲模組</a>
-		</li>
+            <a class="button" title="數學渡河邏輯遊戲模組" href="<?php echo  site_url('modellist/addModel_Page')."?mod=m5"; ?>">數學渡河邏輯遊戲模組</a>
+        </li>
+        <li>
+            <a class="button" title="腳本設計模組" href="<?php echo  site_url('modellist/addModel_Page')."?mod=m6"; ?>">腳本設計模組</a>
+        </li>
     </ul>
     <a class="button" onclick="$.colorbox.close();">取消</a>	
 </div>
