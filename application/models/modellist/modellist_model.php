@@ -13,7 +13,8 @@ class Modellist_model extends CI_Model {
 		'm2' => '搶25遊戲模組',
 		'm3' => '思樂冰製作遊戲模組',
 		'm4' => '最佳銷售組合遊戲模組',
-		'm5' => '數學渡河邏輯遊戲模組',
+        'm5' => '數學渡河邏輯遊戲模組',
+        'm6' => '腳本設計模組',
 		);
 		
 		$return_Array = array();
@@ -217,41 +218,77 @@ class Modellist_model extends CI_Model {
 			}		
 
 			$this->db->insert_batch('leveldsc_list', $data);
-		}	
-		//插入資料到模組5
-		if( $sw_model == 'm5'){
+		}
+        //插入資料到模組5
+        if( $sw_model == 'm5'){
+            $tempArray = array(
+                'key_num'=>$getID,
+                'up_date'=>$nowdate
+            );
+            $this->db->insert('module_5_data', $tempArray);
+
+            //插入關卡敘述leveldsc_list
+            $data = array();
+            for($x=1;$x<3;$x++){
+                $data[] = array(
+                    'module_type' => 'm5' ,
+                    'module_list_num' => $getID,
+                    'level_dsc' => $x,
+                    'user_type' => 'A',
+                    'html_dsc' => $this->input->post('level_'.$x.'_A'),
+                    'up_date'=>$nowdate,
+                );
+            }
+            for($x=1;$x<3;$x++){
+                $data[] = array(
+                    'module_type' => 'm5' ,
+                    'module_list_num' => $getID,
+                    'level_dsc' => $x,
+                    'user_type' => 'B',
+                    'html_dsc' => $this->input->post('level_'.$x.'_B'),
+                    'up_date'=>$nowdate,
+                );
+            }
+
+            $this->db->insert_batch('leveldsc_list', $data);
+        }
+		//插入資料到模組6
+		if( $sw_model == 'm6'){
 			$tempArray = array(
 				'key_num'=>$getID,
-				'up_date'=>$nowdate			
-			);
+				'up_date'=>$nowdate,
+                'unit' => $this->input->post('unit'),
+                'paper' => $this->input->post('paper'),
+                'questions' => $this->input->post('questions'),
+                'model' => $this->input->post('model'),
+
+            );
 			$this->db->insert('module_5_data', $tempArray); 
 
 			//插入關卡敘述leveldsc_list
 			$data = array();
-			for($x=1;$x<3;$x++){
-				$data[] = array(
-				  'module_type' => 'm5' ,
-				  'module_list_num' => $getID,
-				  'level_dsc' => $x,
-				  'user_type' => 'A',
-				  'html_dsc' => $this->input->post('level_'.$x.'_A'),
-				  'up_date'=>$nowdate,
-			   );
-			}
-			for($x=1;$x<3;$x++){
-				$data[] = array(
-				  'module_type' => 'm5' ,
-				  'module_list_num' => $getID,
-				  'level_dsc' => $x,
-				  'user_type' => 'B',
-				  'html_dsc' => $this->input->post('level_'.$x.'_B'),
-				  'up_date'=>$nowdate,
-			   );
-			}		
+            $data[] = array(
+              'module_type' => 'm6' ,
+              'module_list_num' => $getID,
+              'level_dsc' => '1',
+              'user_type' => 'A',
+              'html_dsc' => $this->input->post('contents_dsc'),
+              'up_date'=>$nowdate,
+           );
+
+            $data[] = array(
+                'module_type' => 'm6' ,
+                'module_list_num' => $getID,
+                'level_dsc' => '1',
+                'user_type' => 'B',
+                'html_dsc' => $this->input->post('contents_dsc'),
+                'up_date'=>$nowdate,
+            );
 
 			$this->db->insert_batch('leveldsc_list', $data);			
-		}			
-	}
+		}
+
+    }
 	
 	public function updateModelData($num){
 		$sw_model = $this->input->post('module_type');
@@ -470,6 +507,44 @@ class Modellist_model extends CI_Model {
 			}
 			$this->db->insert_batch('leveldsc_list', $data);			
 		}
+        //更新資料到模組6
+        if( $sw_model == 'm6'){
+            $tempArray = array(
+                'up_date'=>$nowdate,
+                'unit' => $this->input->post('unit'),
+                'paper' => $this->input->post('paper'),
+                'questions' => $this->input->post('questions'),
+                'model' => $this->input->post('model'),
+            );
+            $this->db->where('key_num',$num);
+            $this->db->update('module_6_data', $tempArray);
+
+            //刪除關卡敘述
+            $this->db->where('module_type', 'm6');
+            $this->db->where('module_list_num', $num);
+            $this->db->delete('leveldsc_list');
+            //插入關卡敘述
+            $data = array();
+            $data[] = array(
+                'module_type' => 'm6' ,
+                'module_list_num' => $num,
+                'level_dsc' => '1',
+                'user_type' => 'A',
+                'html_dsc' => $this->input->post('contents_dsc'),
+                'up_date'=>$nowdate,
+            );
+
+            $data[] = array(
+                'module_type' => 'm6' ,
+                'module_list_num' => $num,
+                'level_dsc' => '1',
+                'user_type' => 'B',
+                'html_dsc' => $this->input->post('contents_dsc'),
+                'up_date'=>$nowdate,
+            );
+
+            $this->db->insert_batch('leveldsc_list', $data);
+        }
 	}
 
 	public function getModelData($getID){
@@ -505,10 +580,13 @@ class Modellist_model extends CI_Model {
 		if(isset($tempArray['module_type']) and  $tempArray['module_type'] == 'm4'){
 			$query = $this->db->get('module_4_data')->result();
 		}
-		if(isset($tempArray['module_type']) and  $tempArray['module_type'] == 'm5'){
-			$query = $this->db->get('module_5_data')->result();
-		}
-		
+        if(isset($tempArray['module_type']) and  $tempArray['module_type'] == 'm5'){
+            $query = $this->db->get('module_5_data')->result();
+        }
+        if(isset($tempArray['module_type']) and  $tempArray['module_type'] == 'm6'){
+            $query = $this->db->get('module_6_data')->result();
+        }
+
 		$moduleArray = array();
 			foreach ($query as $row)
 		{
@@ -518,7 +596,7 @@ class Modellist_model extends CI_Model {
 		}
 		
 		$tempArray['modulesData'] = $moduleArray;
-		
+
 		return $tempArray;
 	}
 	
