@@ -263,7 +263,7 @@ class Modellist_model extends CI_Model {
                 'model' => $this->input->post('model'),
 
             );
-			$this->db->insert('module_5_data', $tempArray); 
+			$this->db->insert('module_6_data', $tempArray);
 
 			//插入關卡敘述leveldsc_list
 			$data = array();
