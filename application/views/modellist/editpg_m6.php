@@ -91,7 +91,7 @@ echo form_open_multipart('modellist/setModelData', $attributes,$hidden);
                                             foreach($model_options as $v)
                                             {
                                         ?>
-                                                <option value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+                                                <option value="<?php echo $v['id']; ?>" <?php echo (isset($modelsData['model']) and $modelsData['model'] == $v['id'])?'selected':'';?>><?php echo $v['name']; ?></option>
                                         <?php
                                             }
                                         }
