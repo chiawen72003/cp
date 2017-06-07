@@ -99,15 +99,23 @@ class Testlist_model extends CI_Model {
 					
 					$modelData_4 = $this->get_model4_data($mArray->m4);
 					$returnData['modelData_4'] = $modelData_4;
-				}	
-				if($value == '5' and $mArray->m5 > ''){
-					$returnData['switchDsc'].= '"'.$value.'",';
-					$returnData['switchModel'][] = $value;	
-					
-					$modelData_5 = $this->get_model5_data($mArray->m5);
-					$returnData['modelData_5'] = $modelData_5;
-				}	
-			}
+				}
+                if($value == '5' and $mArray->m5 > ''){
+                    $returnData['switchDsc'].= '"'.$value.'",';
+                    $returnData['switchModel'][] = $value;
+
+                    $modelData_5 = $this->get_model5_data($mArray->m5);
+                    $returnData['modelData_5'] = $modelData_5;
+                }
+                if($value == '6' and $mArray->m6 > ''){
+                    $returnData['switchDsc'].= '"'.$value.'",';
+                    $returnData['switchModel'][] = $value;
+
+                    $modelData_6 = $this->get_model6_data($mArray->m6);
+                    $returnData['modelData_6'] = $modelData_6;
+                }
+
+            }
 		}
 		
 		return $returnData;
@@ -388,7 +396,50 @@ class Testlist_model extends CI_Model {
 		
 		return $returnData;
 	}
-	
+
+    public function get_model6_data($getNum){
+        if($this->session->userdata("roomTYPE") == "A")
+        {
+            $returnData = array(
+            'userType'=>'A',
+            'friendType'=>'B',
+            );
+        }
+
+        if($this->session->userdata("roomTYPE") == "B")
+        {
+            $returnData = array(
+                'userType'=>'B',
+                'friendType'=>'A',
+            );
+        }
+        $this->db->where('key_num',$getNum);
+        $query = $this->db->get('module_6_data')->result();
+        foreach( $query as $row ){
+            $returnData['unit'] = $row->unit;
+            $returnData['paper'] = $row->paper;
+            $returnData['questions'] = $row->questions;
+            $returnData['model'] = $row->model;
+        }
+
+        //取出關卡敘述
+        $this->db->where('module_type','m6');
+        $this->db->where('module_list_num',$getNum);
+        if($this->session->userdata("roomTYPE") == "A"){
+            $this->db->where('user_type','A');
+        }
+        if($this->session->userdata("roomTYPE") == "B"){
+            $this->db->where('user_type','B');
+        }
+        $query = $this->db->get('leveldsc_list')->result();
+        foreach( $query as $row ){
+            $returnData['levelDsc'][$row->level_dsc] = $row->html_dsc;
+        }
+
+
+        return $returnData;
+    }
+
 	public function getGeneralData(){
 		$tempArray = array();
 		$query = $this->db->get('general_data')->result();
