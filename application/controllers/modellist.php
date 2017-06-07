@@ -122,6 +122,8 @@ class Modellist extends CI_Controller {
             $this->layout->view('modellist/editpg_m5',$data);
         }
         if( $switch_mod == 'm6' ){
+            $json_data = file_get_contents("http://127.0.0.1/ntcu/public/Api/Model/list");
+            $data['model_options'] = json_decode($json_data, true);
             $this->layout->view('modellist/editpg_m6',$data);
         }
 	}
@@ -180,6 +182,8 @@ class Modellist extends CI_Controller {
             if(isset($data['dataList']['module_type']) and $data['dataList']['module_type'] == 'm6'){
                 $data['modelsData'] = $data['dataList']['modulesData'];
                 $data['levelDsc'] = $this->modellist_model->getLevelData('m6',$getID);//關卡敘述
+                $json_data = file_get_contents("http://127.0.0.1/ntcu/public/Api/Model/list");
+                $data['model_options'] = json_decode($json_data, true);
 
                 $this->layout->view('modellist/editpg_m6',$data);
             }
