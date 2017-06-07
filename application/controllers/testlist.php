@@ -103,10 +103,24 @@ class Testlist extends CI_Controller {
 							$data['model_data']['switchModelData'][] = $this->load->view('modelpg/model4/index_b',$data,true);
 						}
 					}
-					//數學渡河邏輯遊戲模組
-					if($value == '5'){
-						$data['model_data']['switchModelData'][] = $this->load->view('modelpg/model5/index',$data,true);
-					}
+                    //數學渡河邏輯遊戲模組
+                    if($value == '5'){
+                        $data['model_data']['switchModelData'][] = $this->load->view('modelpg/model5/index',$data,true);
+                    }
+                    //腳本設計模組
+                    if($value == '6'){
+                        $page = '';
+                        if(isset($data['model_data']['modelData_6']['model']))
+                        {
+                            $ch = curl_init();
+                            curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1/ntcu/public/Api/Model/Page/".$data['model_data']['modelData_6']['model']);
+                            curl_setopt($ch, CURLOPT_HEADER, 0);
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                            $page = curl_exec($ch);
+                            curl_close($ch);
+                        }
+                        $data['model_data']['switchModelData'][] = $page;
+                    }
 				}
 				$this->layout->view('testlist/testpg',$data);
 			}else{
