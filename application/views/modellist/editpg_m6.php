@@ -85,11 +85,18 @@ echo form_open_multipart('modellist/setModelData', $attributes,$hidden);
                         <tr>
                             <td>
                                 <p>請選擇模組類型：<select name="model" id="model" >
-                                        <option value="1">閱讀出題模組</option>
-                                        <option value="2" <?php echo (isset($modelsData['model']) and $modelsData['model'] == '2')?'selected':'';?>>搶25遊戲模組</option>
-                                        <option value="3" <?php echo (isset($modelsData['model']) and $modelsData['model'] == '3')?'selected':'';?>>思樂冰製作遊戲模組</option>
-                                        <option value="4" <?php echo (isset($modelsData['model']) and $modelsData['model'] == '4')?'selected':'';?>>最佳銷售組合遊戲模組</option>
-                                        <option value="5" <?php echo (isset($modelsData['model']) and $modelsData['model'] == '5')?'selected':'';?>>數學渡河邏輯遊戲模組</option>
+                                        <?php
+                                        if(isset($model_options))
+                                        {
+                                            foreach($model_options as $v)
+                                            {
+                                        ?>
+                                                <option value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+                                        <?php
+                                            }
+                                        }
+
+                                        ?>
                                     </select>
                                 </p>
                             </td>
