@@ -8,7 +8,7 @@
 <script type="text/javascript" src="<?php echo base_url('public/js/speech.js'); ?>"></script> 
 <script type="text/javascript" src="<?php echo base_url('public/js/record-function.js'); ?>"></script> 
 <script src="<?php echo base_url('node_modules/socket.io/node_modules/socket.io-client/socket.io.js'); ?>"></script>
-<link rel="stylesheet" href="<?php echo base_url('public/css/testpg/test.css'); ?>"/>
+<link rel="stylesheet" href="<?php echo base_url('public/css/testpg/test.css?v=0.2'); ?>"/>
 <link rel="stylesheet" href="<?php echo base_url('public/css/testpg/Button.css'); ?>"/>
 <link rel="stylesheet" href="<?php echo base_url('public/css/testpg/sh-style_1.css'); ?>"/>
 
@@ -456,6 +456,7 @@ $('#msgInput').keydown(function(e){
 <div id="wraper">
 	<!--聊天框-->
 	<div id="talk">
+		<a href="#" class="t_btnBack">回上一頁</a>
 		<div class="t_message">
 			<div class="speak-1" id="chatRoom" rows="30" cols="30"></div>
 			<div class="t_but">
