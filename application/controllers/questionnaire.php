@@ -87,48 +87,21 @@ class Questionnaire extends CI_Controller {
 	
 	public function add_Page()
 	{
-		$switch_mod = 'm1';
-		$this->load->library('layout');//套用樣板為layout_main
-		if($this->session->userdata("loginType") == "teacher"){
-			$this->layout->setLayout('layout/back/layout_ta');//套用樣板
-		}
-		if($this->session->userdata("loginType") == "root"){
-			$this->layout->setLayout('layout/back/layout_root');//套用樣板
-		}
-		
-		
-		if($this->input->get('mod') > ''){
-			$switch_mod = $this->input->get('mod');			
-		}
+        $this->load->library('pagination');
 
-		$data = array();
-		$data['base'] = $this->config->item('base_url');
-		if( $switch_mod == 'm1' ){	
-			$this->layout->view('modellist/editpg_m1',$data);
-		}
-		if( $switch_mod == 'm2' ){	
-			$this->layout->view('modellist/editpg_m2',$data);
-		}
-		if( $switch_mod == 'm3' ){	
-			$this->layout->view('modellist/editpg_m3',$data);
-		}
-		if( $switch_mod == 'm4' ){	
-			$this->layout->view('modellist/editpg_m4',$data);
-		}
-        if( $switch_mod == 'm5' ){
-            $this->layout->view('modellist/editpg_m5',$data);
+        $this->load->library('layout');//套用樣板為layout_main
+        if($this->session->userdata("loginType") == "teacher"){
+            $this->layout->setLayout('layout/back/layout_ta');//套用樣板
         }
-        if( $switch_mod == 'm6' ){
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1/ntcu/public/Api/Model/list");
-            curl_setopt($ch, CURLOPT_HEADER, 0);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            $json_data = curl_exec($ch);
-            curl_close($ch);
-            $data['model_options'] = json_decode($json_data, true);
-            $this->layout->view('modellist/editpg_m6',$data);
+        if($this->session->userdata("loginType") == "root"){
+            $this->layout->setLayout('layout/back/layout_root');//套用樣板
         }
-	}
+
+        $data = array();
+        $data['base'] = $this->config->item('base_url');
+
+        $this->layout->view('questionnaire/add_page',$data);
+    }
 
 	public function edit_Page(){
 		if(is_numeric($this->input->get('num'))){
