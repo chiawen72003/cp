@@ -36,8 +36,9 @@ $(function(){
     	<li><a href="<?php echo site_url('schoollist/'); ?>" title="學校管理"><img src="<?php echo base_url('public/images/back/icon_add.png');?>" />學校管理</a></li>
     	<li><a href="<?php echo site_url('teacherlist/'); ?>" title="教師管理"><img src="<?php echo base_url('public/images/back/icon_add.png');?>" />教師管理</a></li>
     	<li><a href="<?php echo site_url('classlist/'); ?>" title="學生管理"><img src="<?php echo base_url('public/images/back/icon_add.png');?>" />學生管理</a></li>
-    	<li><a href="<?php echo site_url('recordlist/'); ?>" title="操作紀錄列表"><img src="<?php echo base_url('public/images/back/icon_add.png');?>" />操作紀錄列表</a></li>	
-		<li><a href="<?php echo site_url('achievementlist/schoolList'); ?>" title="成績列表"><img src="<?php echo base_url('public/images/back/icon_add.png');?>" />成績列表</a></li>
+    	<li><a href="<?php echo site_url('recordlist/'); ?>" title="操作紀錄列表"><img src="<?php echo base_url('public/images/back/icon_add.png');?>" />操作紀錄列表</a></li>
+        <li><a href="<?php echo site_url('achievementlist/schoolList'); ?>" title="成績列表"><img src="<?php echo base_url('public/images/back/icon_add.png');?>" />成績列表</a></li>
+        <li><a href="<?php echo site_url('questionnaire/'); ?>" title="問卷列表"><img src="<?php echo base_url('public/images/back/icon_add.png');?>" />問卷列表</a></li>
     	<li><a href="<?php echo site_url('memck/logout_admin'); ?>" title="登出"><img src="<?php echo base_url('public/images/back/icon_add.png');?>" />登出</a></li>
     </ul>
 </aside>
