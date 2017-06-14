@@ -15,7 +15,13 @@
 <script src="<?php echo $base;?>public/js/back/jquery.colorbox.js"></script>
 <script src="<?php echo $base;?>public/js/back/ckeditor/ckeditor.js"></script>
 
-<script language="javascript">
+<!-- questionnaireList -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="<?php echo $base;?>public/css/back/questionnaire.css?v=0.31">
+<!-- questionnaireList end -->
+
+
+    <script language="javascript">
 function add_Questions(){
 	
 } 
