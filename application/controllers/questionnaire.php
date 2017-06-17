@@ -89,6 +89,22 @@ class Questionnaire extends CI_Controller
     }
 
     /**
+     * 學生實際填寫問卷
+     */
+    public function do_page()
+    {
+        $this->load->library('layout');//套用樣板為layout_main
+        $data = array();
+        $data['base'] = $this->config->item('base_url');
+        $num = $this->input->get('num');
+        $t_obj = new Questionnaire_model();
+        $t_obj -> init(array('num', $num));
+        $data['q_dat'] = $t_obj -> get_data();
+        $this->layout->setLayout('layout/front/questionnaire_layout');//套用樣板
+        $this->layout->view('questionnaire/do_page', $data);
+    }
+
+    /**
      * 新增問卷的編輯頁面
      */
     public function add_Page()
