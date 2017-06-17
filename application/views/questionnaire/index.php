@@ -18,16 +18,43 @@
     <div class="accordionButton">
         <table class="list_item">
             <tbody>
-            <tr>
-                <td width="5%">1</td>
-                <td width="50%">問卷標題</td>
-                <td width="45%">
-                    <a class="button" title="編輯" href="add.html">編輯</a>
-                    <a class="button" title="刪除" onclick="">刪除</a>
-                </td>
-            </tr>
+            <?php
+            foreach ($listData as $k => $v)
+            {
+            ?>
+                <tr>
+                    <td width="5%"><?php echo $k+1;?></td>
+                    <td width="50%"><?php echo $v['title_dsc'];?></td>
+                    <td width="45%">
+                        <a class="button" title="編輯" href="<?php echo  site_url("questionnaire/edit_Page/");?>?pg=<?php echo $offsetDsc;?>&num=<?php echo $v['num'];?>">編輯</a>
+                        <a class="button" title="刪除" onclick="del('<?php echo $v['num']; ?>','<?php echo $v['title_dsc'];?>')">刪除</a>
+                    </td>
+                </tr>
+            <?php
+            }
+            ?>
+
             </tbody>
         </table>
     </div>
     <!-- 單元 End -->
 </div>
+<script>
+    //刪除一個問卷
+    function del(key_num,unit_dsc){
+        if(confirm("確定刪除下列標題的題目嗎?\r\n"+unit_dsc)){
+            $.ajax({
+                url: '<?php echo  site_url('questionnaire/del'); ?>',
+                type:"POST",
+                data: {keyNum:key_num},
+                error: function(xhr) {
+                    //alert('Ajax request 發生錯誤');
+                },
+                success: function(response) {
+                    alert('刪除完畢!!');
+                    location.reload();
+                }
+            });
+        }
+    }
+</script>
