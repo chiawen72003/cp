@@ -6,7 +6,6 @@
                 <div class="page-title">編輯問卷</div>
             </div>
             <div class="page-header-right">
-                <a href="../web/questionnaire.html" class="page-header-btn btn-view" target="_blank">預覽</a>
                 <a  class="page-header-btn btn-submit" onclick="send()">提交</a>
             </div>
         </div>
@@ -78,8 +77,8 @@
                     <select class="form-control form-title-select s1" id="sample_type" name="item_type[]">
                         <option value="simple_ans" selected>簡答</option>
                         <option value="detailed">段落</option>
-                        <option value="checkbox">單選</option>
-                        <option value="radiobox">多選</option>
+                        <option value="radiobox">單選</option>
+                        <option value="checkbox">多選</option>
                     </select>
                 </div>
             </div>
@@ -107,8 +106,8 @@
                     <select class="form-control form-title-select s1" id="sample_type" name="item_type[]">
                         <option value="simple_ans" >簡答</option>
                         <option value="detailed" selected>段落</option>
-                        <option value="checkbox">單選</option>
-                        <option value="radiobox">多選</option>
+                        <option value="radiobox">單選</option>
+                        <option value="checkbox">多選</option>
                     </select>
                 </div>
             </div>
@@ -137,8 +136,8 @@
                     <select class="form-control form-title-select s1" id="sample_type" name="item_type[]">
                         <option value="simple_ans" >簡答</option>
                         <option value="detailed" >段落</option>
-                        <option value="checkbox" selected>單選</option>
-                        <option value="radiobox">多選</option>
+                        <option value="radiobox" selected>單選</option>
+                        <option value="checkbox">多選</option>
                     </select>
                 </div>
             </div>
@@ -182,8 +181,8 @@
                     <select class="form-control form-title-select s1" id="sample_type" name="item_type[]">
                         <option value="simple_ans" >簡答</option>
                         <option value="detailed" >段落</option>
-                        <option value="checkbox" >單選</option>
-                        <option value="radiobox" selected>多選</option>
+                        <option value="radiobox" >單選</option>
+                        <option value="checkbox" selected>多選</option>
                     </select>
                 </div>
             </div>
