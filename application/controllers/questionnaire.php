@@ -172,7 +172,9 @@ class Questionnaire extends CI_Controller
     {
         $num = $this->input->post('keyNum');
         if (is_numeric($num)) {
-            $this->modellist_model->del_Model($num);
+            $t_obj = new Questionnaire_model();
+            $t_obj->init(array('num' => $num));
+            $t_obj->del();
         }
     }
 }
