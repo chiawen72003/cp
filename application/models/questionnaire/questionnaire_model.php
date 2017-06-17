@@ -3,7 +3,9 @@
 *	
 */
 class Questionnaire_model extends CI_Model {
-    private $input_data = array();
+    private $input_data = array(
+        'num' => null,
+    );
 
 	public function __construct() {
         parent::__construct();
@@ -27,15 +29,6 @@ class Questionnaire_model extends CI_Model {
      * @return array
      */
 	public function getListData($whereArray='',$limitDsc='',$offsetDsc='',$orderByArray=''){
-		$module_array = array(
-		'm1' => '閱讀出題模組',
-		'm2' => '搶25遊戲模組',
-		'm3' => '思樂冰製作遊戲模組',
-		'm4' => '最佳銷售組合遊戲模組',
-        'm5' => '數學渡河邏輯遊戲模組',
-        'm6' => '腳本設計模組',
-		);
-		
 		$return_Array = array();
 		if( is_array($whereArray) ){
 			foreach($whereArray as $key => $value ){
@@ -49,268 +42,94 @@ class Questionnaire_model extends CI_Model {
 		}
 		if( $limitDsc>''  and $offsetDsc>'' )
 		{			
-			$query = $this->db->get('module_list', $limitDsc, $offsetDsc)->result();
+			$query = $this->db->get('questionnaire_list', $limitDsc, $offsetDsc)->result();
 		}else{
-			$query = $this->db->get('module_list')->result();
+			$query = $this->db->get('questionnaire_list')->result();
 		}
 		
 		foreach( $query as $row ){
 			$tempArray = array();
 			foreach($row as $key => $value){
-				if($key == 'module_type'){
-					$tempArray['module_type'] = $module_array[$value];
-				}else{
-					$tempArray[$key] = $value;
-				}
+                $tempArray[$key] = $value;
 			}
 			$return_Array[] = $tempArray;
-		}		
+		}
+
 		return $return_Array;
 	}
+
+    /**
+     * 取得單一問卷的設定資料
+     */
+	public function get_data()
+    {
+        $t = array();
+        if($this->input_data['num'])
+        {
+            $this->db->where('num', $this->input_data['num']);
+            $query = $this->db->get('questionnaire_list')->result();
+            foreach( $query as $row ){
+                $t['title_dsc'] = $row ->title_dsc;
+                $t['contents_dsc'] = $row ->contents_dsc;
+                $t['item_data'] = '';
+
+                $this->db->where('questionnaire_list_num', $this->input_data['num']);
+                $query2 = $this->db->get('questionnaire_data')->result();
+                foreach( $query2 as $row2 ){
+                    $t['item_data'] = $row2 -> item_data;
+                }
+            }
+        }
+
+        return $t;
+    }
 
     /**
      * 新增問卷資料
      *
      */
 	public function insertData(){
-		$sw_model = $this->input->post('module_type');
-		$nowdate =  date("Y-m-d H:i",time());
-		$tempArray = array(
-			'module_type'=>$sw_model,
-			'title_dsc'=>$this->input->post('title_dsc'),
-			'contents_dsc'=>$this->input->post('contents_dsc'),
-			'up_date'=>$nowdate			
-		);
-		
-		if($this->session->userdata("loginType") == "teacher"){
-			$tempArray['user_type'] = 'teacher';
-			$tempArray['user_num'] = $this->session->userdata("userID");		
-		}
-		if($this->session->userdata("loginType") == "root"){
-			$tempArray['user_type'] = 'root';
-		}
-		
-		$this->db->insert('module_list', $tempArray); 
-		$getID = $this->db->insert_id();
-		
-		//插入資料到模組1
-		if( $sw_model == 'm1'){
-			$tempArray = array();
-			$tempArray[] = $this->input->post('options_1');
-			$tempArray[] = $this->input->post('options_2');
-			$json_data = json_encode($tempArray);
-			$tempArray = array(
-				'key_num'=>$getID,
-				'text_1_A'=>$this->input->post('text_1_A'),
-				'text_1_B'=>$this->input->post('text_1_B'),
-				'text_2_A'=>$this->input->post('text_2_A'),
-				'text_2_B'=>$this->input->post('text_2_B'),
-				'text_3_A'=>$this->input->post('text_3_A'),
-				'text_3_B'=>$this->input->post('text_3_B'),
-				'option_dsc'=>$json_data,				
-				'up_date'=>$nowdate			
-			);
-			$this->db->insert('module_1_data', $tempArray); 
-			//插入關卡敘述leveldsc_list
-			$data = array();
-			for($x=1;$x<4;$x++){
-				$data[] = array(
-				  'module_type' => 'm1' ,
-				  'module_list_num' => $getID,
-				  'level_dsc' => $x,
-				  'user_type' => 'A',
-				  'html_dsc' => $this->input->post('level_'.$x.'_A'),
-				  'up_date'=>$nowdate,
-			   );
-			}
-			for($x=1;$x<4;$x++){
-				$data[] = array(
-				  'module_type' => 'm1' ,
-				  'module_list_num' => $getID,
-				  'level_dsc' => $x,
-				  'user_type' => 'B',
-				  'html_dsc' => $this->input->post('level_'.$x.'_B'),
-				  'up_date'=>$nowdate,
-			   );
-			}		
+        $tempArray = array();
+        $tempArray['title_dsc'] = $this -> input_data['title_dsc'];
+        $tempArray['contents_dsc'] = $this -> input_data['contents_dsc'];
+        $tempArray['up_date'] = date("Y-m-d H:i",time());
 
-			$this->db->insert_batch('leveldsc_list', $data);
-		}
-		
-		//插入資料到模組2
-		if( $sw_model == 'm2'){
-			$json_data = json_encode($_POST);
-			$tempArray = array(
-				'key_num'=>$getID,
-				'value_dsc'=>$json_data,
-				'up_date'=>$nowdate			
-			);
-			$this->db->insert('module_2_data', $tempArray); 
-
-			//插入關卡敘述leveldsc_list
-			$data = array();
-			for($x=1;$x<7;$x++){
-				$data[] = array(
-				  'module_type' => 'm2' ,
-				  'module_list_num' => $getID,
-				  'level_dsc' => $x,
-				  'user_type' => 'A',
-				  'html_dsc' => $this->input->post('level_'.$x.'_A'),
-				  'up_date'=>$nowdate,
-			   );
-			}
-			for($x=1;$x<7;$x++){
-				$data[] = array(
-				  'module_type' => 'm2' ,
-				  'module_list_num' => $getID,
-				  'level_dsc' => $x,
-				  'user_type' => 'B',
-				  'html_dsc' => $this->input->post('level_'.$x.'_B'),
-				  'up_date'=>$nowdate,
-			   );
-			}
-			$this->db->insert_batch('leveldsc_list', $data);		
-			
-		}	
-		
-		//插入資料到模組3
-		if( $sw_model == 'm3'){
-			$json_data = json_encode($_POST);
-			$tempArray = array(
-				'key_num'=>$getID,
-				'value_dsc'=>$json_data,
-				'up_date'=>$nowdate			
-			);
-			$this->db->insert('module_3_data', $tempArray); 
-			
-			//插入關卡敘述leveldsc_list
-			$data = array();
-			for($x=1;$x<4;$x++){
-				$data[] = array(
-				  'module_type' => 'm3' ,
-				  'module_list_num' => $getID,
-				  'level_dsc' => $x,
-				  'user_type' => 'A',
-				  'html_dsc' => $this->input->post('level_'.$x.'_A'),
-				  'up_date'=>$nowdate,
-			   );
-			}
-			for($x=1;$x<4;$x++){
-				$data[] = array(
-				  'module_type' => 'm3' ,
-				  'module_list_num' => $getID,
-				  'level_dsc' => $x,
-				  'user_type' => 'B',
-				  'html_dsc' => $this->input->post('level_'.$x.'_B'),
-				  'up_date'=>$nowdate,
-			   );
-			}
-			$this->db->insert_batch('leveldsc_list', $data);
-		}
-		//插入資料到模組4
-		if( $sw_model == 'm4'){
-			$tempArray = array(
-				'key_num'=>$getID,
-				'value_dsc_c'=>$this->input->post('value_dsc_c'),				
-				'value_dsc_m'=>$this->input->post('value_dsc_m'),				
-				'value_dsc_l'=>$this->input->post('value_dsc_l'),				
-				'up_date'=>$nowdate			
-			);
-			$this->db->insert('module_4_data', $tempArray); 
-			//插入關卡敘述leveldsc_list
-			$data = array();
-			for($x=1;$x<2;$x++){
-				$data[] = array(
-				  'module_type' => 'm4' ,
-				  'module_list_num' => $getID,
-				  'level_dsc' => $x,
-				  'user_type' => 'A',
-				  'html_dsc' => $this->input->post('level_'.$x.'_A'),
-				  'up_date'=>$nowdate,
-			   );
-			}
-			for($x=1;$x<2;$x++){
-				$data[] = array(
-				  'module_type' => 'm4' ,
-				  'module_list_num' => $getID,
-				  'level_dsc' => $x,
-				  'user_type' => 'B',
-				  'html_dsc' => $this->input->post('level_'.$x.'_B'),
-				  'up_date'=>$nowdate,
-			   );
-			}		
-
-			$this->db->insert_batch('leveldsc_list', $data);
-		}
-        //插入資料到模組5
-        if( $sw_model == 'm5'){
-            $tempArray = array(
-                'key_num'=>$getID,
-                'up_date'=>$nowdate
-            );
-            $this->db->insert('module_5_data', $tempArray);
-
-            //插入關卡敘述leveldsc_list
-            $data = array();
-            for($x=1;$x<3;$x++){
-                $data[] = array(
-                    'module_type' => 'm5' ,
-                    'module_list_num' => $getID,
-                    'level_dsc' => $x,
-                    'user_type' => 'A',
-                    'html_dsc' => $this->input->post('level_'.$x.'_A'),
-                    'up_date'=>$nowdate,
-                );
-            }
-            for($x=1;$x<3;$x++){
-                $data[] = array(
-                    'module_type' => 'm5' ,
-                    'module_list_num' => $getID,
-                    'level_dsc' => $x,
-                    'user_type' => 'B',
-                    'html_dsc' => $this->input->post('level_'.$x.'_B'),
-                    'up_date'=>$nowdate,
-                );
-            }
-
-            $this->db->insert_batch('leveldsc_list', $data);
+        if($this->session->userdata("loginType") == "teacher"){
+            $tempArray['user_type'] = 'teacher';
+            $tempArray['user_num'] = $this->session->userdata("userID");
         }
-		//插入資料到模組6
-		if( $sw_model == 'm6'){
-			$tempArray = array(
-				'key_num'=>$getID,
-				'up_date'=>$nowdate,
-                'unit' => $this->input->post('unit'),
-                'paper' => $this->input->post('paper'),
-                'questions' => $this->input->post('questions'),
-                'model' => $this->input->post('model'),
+        if($this->session->userdata("loginType") == "root"){
+            $tempArray['user_type'] = 'root';
+        }
+        $this->db->insert('questionnaire_list', $tempArray);
+        $getID = $this->db->insert_id();
 
-            );
-			$this->db->insert('module_6_data', $tempArray);
-
-			//插入關卡敘述leveldsc_list
-			$data = array();
-            $data[] = array(
-              'module_type' => 'm6' ,
-              'module_list_num' => $getID,
-              'level_dsc' => '1',
-              'user_type' => 'A',
-              'html_dsc' => $this->input->post('contents_dsc'),
-              'up_date'=>$nowdate,
-           );
-
-            $data[] = array(
-                'module_type' => 'm6' ,
-                'module_list_num' => $getID,
-                'level_dsc' => '1',
-                'user_type' => 'B',
-                'html_dsc' => $this->input->post('contents_dsc'),
-                'up_date'=>$nowdate,
-            );
-
-			$this->db->insert_batch('leveldsc_list', $data);			
-		}
-
+        //整理問卷物件，插入資料表
+        $t_array = array();
+        $item_area_num = $this -> input_data['item_area_num'];
+        if(is_array($item_area_num))
+        {
+            foreach ($item_area_num as $key => $num)
+            {
+                $temp_data = array();
+                $temp_data['title'] = $this -> input_data['item_title'][$key];
+                $temp_data['type'] = $this -> input_data['item_type'][$key];
+                $temp_data['items'] = array();
+                if($temp_data['type'] == 'checkbox' )
+                {
+                    $temp_data['items'] = $this -> input_data['checkbox_value_'. $num];
+                }
+                if($temp_data['type'] == 'radiobox')
+                {
+                    $temp_data['items'] = $this -> input_data['radiobox_value_'. $num];
+                }
+                $t_array[] = $temp_data;
+            }
+        }
+        $tempArray = array();
+        $tempArray['questionnaire_list_num'] = $getID;
+        $tempArray['item_data'] = json_encode($t_array);
+        $this->db->insert('questionnaire_data', $tempArray);
     }
 
     /**
@@ -318,260 +137,50 @@ class Questionnaire_model extends CI_Model {
      *
      * @param $num
      */
-	public function updateModelData($num){
-		$sw_model = $this->input->post('module_type');
-		$nowdate =  date("Y-m-d H:i",time());
-		$tempArray = array(
-			'module_type'=>$sw_model,
-			'title_dsc'=>$this->input->post('title_dsc'),
-			'contents_dsc'=>$this->input->post('contents_dsc'),
-			'up_date'=>$nowdate			
-		);
+	public function updateData(){
+	    if($this -> input_data['num'])
+	    {
 
-		if($this->session->userdata("loginType") == "teacher"){
-			$tempArray['user_type'] = 'teacher';
-			$tempArray['user_num'] = $this->session->userdata("userID");		
-		}
-		if($this->session->userdata("loginType") == "root"){
-			$tempArray['user_type'] = 'root';
-		}		
-		
-		$this->db->where('num',$num);		
-		$this->db->update('module_list', $tempArray); 
-		
-		//更新資料到模組1
-		if( $sw_model == 'm1'){
-			$tempArray = array();
-			$tempArray[] = $this->input->post('options_1');
-			$tempArray[] = $this->input->post('options_2');
-			$json_data = json_encode($tempArray);
-			$tempArray = array(
-				'text_1_A'=>$this->input->post('text_1_A'),
-				'text_1_B'=>$this->input->post('text_1_B'),
-				'text_2_A'=>$this->input->post('text_2_A'),
-				'text_2_B'=>$this->input->post('text_2_B'),
-				'text_3_A'=>$this->input->post('text_3_A'),
-				'text_3_B'=>$this->input->post('text_3_B'),
-				'option_dsc'=>$json_data,				
-				'up_date'=>$nowdate			
-			);
-			$this->db->where('key_num',$num);		
-			$this->db->update('module_1_data', $tempArray); 
-			
-			//刪除關卡敘述
-			$this->db->where('module_type', 'm1');
-			$this->db->where('module_list_num', $num);
-			$this->db->delete('leveldsc_list'); 
-			//插入關卡敘述
-			$data = array();
-			for($x=1;$x<4;$x++){
-				$data[] = array(
-				  'module_type' => 'm1' ,
-				  'module_list_num' => $num,
-				  'level_dsc' => $x,
-				  'user_type' => 'A',
-				  'html_dsc' => $this->input->post('level_'.$x.'_A'),
-				  'up_date'=>$nowdate,
-			   );
-			}
-			for($x=1;$x<4;$x++){
-				$data[] = array(
-				  'module_type' => 'm1' ,
-				  'module_list_num' => $num,
-				  'level_dsc' => $x,
-				  'user_type' => 'B',
-				  'html_dsc' => $this->input->post('level_'.$x.'_B'),
-				  'up_date'=>$nowdate,
-			   );
-			}
-			$this->db->insert_batch('leveldsc_list', $data);
-		}
-		
-		//更新資料到模組2
-		if( $sw_model == 'm2'){
-			$json_data = json_encode($_POST);
-			$tempArray = array(
-				'value_dsc'=>$json_data,
-				'up_date'=>$nowdate			
-			);
-			$this->db->where('key_num',$num);		
-			$this->db->update('module_2_data', $tempArray); 
-			//刪除關卡敘述
-			$this->db->where('module_type', 'm2');
-			$this->db->where('module_list_num', $num);
-			$this->db->delete('leveldsc_list'); 
-			//插入關卡敘述
-			$data = array();
-			for($x=1;$x<7;$x++){
-				$data[] = array(
-				  'module_type' => 'm2' ,
-				  'module_list_num' => $num,
-				  'level_dsc' => $x,
-				  'user_type' => 'A',
-				  'html_dsc' => $this->input->post('level_'.$x.'_A'),
-				  'up_date'=>$nowdate,
-			   );
-			}
-			for($x=1;$x<7;$x++){
-				$data[] = array(
-				  'module_type' => 'm2' ,
-				  'module_list_num' => $num,
-				  'level_dsc' => $x,
-				  'user_type' => 'B',
-				  'html_dsc' => $this->input->post('level_'.$x.'_B'),
-				  'up_date'=>$nowdate,
-			   );
-			}
-			$this->db->insert_batch('leveldsc_list', $data);			
-		}	
-		//更新資料到模組3
-		if( $sw_model == 'm3'){
-			$json_data = json_encode($_POST);
-			$tempArray = array(
-				'value_dsc'=>$json_data,
-				'up_date'=>$nowdate			
-			);
-			$this->db->where('key_num',$num);		
-			$this->db->update('module_3_data', $tempArray); 
-			//刪除關卡敘述
-			$this->db->where('module_type', 'm3');
-			$this->db->where('module_list_num', $num);
-			$this->db->delete('leveldsc_list'); 
-			//插入關卡敘述
-			$data = array();
-			for($x=1;$x<4;$x++){
-				$data[] = array(
-				  'module_type' => 'm3' ,
-				  'module_list_num' => $num,
-				  'level_dsc' => $x,
-				  'user_type' => 'A',
-				  'html_dsc' => $this->input->post('level_'.$x.'_A'),
-				  'up_date'=>$nowdate,
-			   );
-			}
-			for($x=1;$x<4;$x++){
-				$data[] = array(
-				  'module_type' => 'm3' ,
-				  'module_list_num' => $num,
-				  'level_dsc' => $x,
-				  'user_type' => 'B',
-				  'html_dsc' => $this->input->post('level_'.$x.'_B'),
-				  'up_date'=>$nowdate,
-			   );
-			}
-			$this->db->insert_batch('leveldsc_list', $data);			
-		}
-		//更新資料到模組4
-		if( $sw_model == 'm4'){
-			$tempArray = array(
-				'value_dsc_c'=>$this->input->post('value_dsc_c'),				
-				'value_dsc_m'=>$this->input->post('value_dsc_m'),				
-				'value_dsc_l'=>$this->input->post('value_dsc_l'),				
-				'up_date'=>$nowdate			
-			);
-			$this->db->where('key_num',$num);		
-			$this->db->update('module_4_data', $tempArray); 
-			//刪除關卡敘述
-			$this->db->where('module_type', 'm4');
-			$this->db->where('module_list_num', $num);
-			$this->db->delete('leveldsc_list'); 
-			//插入關卡敘述
-			$data = array();
-			for($x=1;$x<2;$x++){
-				$data[] = array(
-				  'module_type' => 'm4' ,
-				  'module_list_num' => $num,
-				  'level_dsc' => $x,
-				  'user_type' => 'A',
-				  'html_dsc' => $this->input->post('level_'.$x.'_A'),
-				  'up_date'=>$nowdate,
-			   );
-			}
-			for($x=1;$x<2;$x++){
-				$data[] = array(
-				  'module_type' => 'm4' ,
-				  'module_list_num' => $num,
-				  'level_dsc' => $x,
-				  'user_type' => 'B',
-				  'html_dsc' => $this->input->post('level_'.$x.'_B'),
-				  'up_date'=>$nowdate,
-			   );
-			}
-			$this->db->insert_batch('leveldsc_list', $data);			
-		}
-		//更新資料到模組5
-		if( $sw_model == 'm5'){
-			$tempArray = array(
-				'up_date'=>$nowdate			
-			);
-			$this->db->where('key_num',$num);		
-			$this->db->update('module_5_data', $tempArray); 
-			
-			//刪除關卡敘述
-			$this->db->where('module_type', 'm5');
-			$this->db->where('module_list_num', $num);
-			$this->db->delete('leveldsc_list'); 
-			//插入關卡敘述
-			$data = array();
-			for($x=1;$x<3;$x++){
-				$data[] = array(
-				  'module_type' => 'm5' ,
-				  'module_list_num' => $num,
-				  'level_dsc' => $x,
-				  'user_type' => 'A',
-				  'html_dsc' => $this->input->post('level_'.$x.'_A'),
-				  'up_date'=>$nowdate,
-			   );
-			}
-			for($x=1;$x<3;$x++){
-				$data[] = array(
-				  'module_type' => 'm5' ,
-				  'module_list_num' => $num,
-				  'level_dsc' => $x,
-				  'user_type' => 'B',
-				  'html_dsc' => $this->input->post('level_'.$x.'_B'),
-				  'up_date'=>$nowdate,
-			   );
-			}
-			$this->db->insert_batch('leveldsc_list', $data);			
-		}
-        //更新資料到模組6
-        if( $sw_model == 'm6'){
-            $tempArray = array(
-                'up_date'=>$nowdate,
-                'unit' => $this->input->post('unit'),
-                'paper' => $this->input->post('paper'),
-                'questions' => $this->input->post('questions'),
-                'model' => $this->input->post('model'),
-            );
-            $this->db->where('key_num',$num);
-            $this->db->update('module_6_data', $tempArray);
+            $tempArray['title_dsc'] = $this -> input_data['title_dsc'];
+            $tempArray['contents_dsc'] = $this -> input_data['contents_dsc'];
+            $tempArray['up_date'] = date("Y-m-d H:i",time());
 
-            //刪除關卡敘述
-            $this->db->where('module_type', 'm6');
-            $this->db->where('module_list_num', $num);
-            $this->db->delete('leveldsc_list');
-            //插入關卡敘述
-            $data = array();
-            $data[] = array(
-                'module_type' => 'm6' ,
-                'module_list_num' => $num,
-                'level_dsc' => '1',
-                'user_type' => 'A',
-                'html_dsc' => $this->input->post('contents_dsc'),
-                'up_date'=>$nowdate,
-            );
+            if($this->session->userdata("loginType") == "teacher"){
+                $tempArray['user_type'] = 'teacher';
+                $tempArray['user_num'] = $this->session->userdata("userID");
+            }
+            if($this->session->userdata("loginType") == "root"){
+                $tempArray['user_type'] = 'root';
+            }
+            $this->db->where('num',$this-> input_data['num']);
+            $this->db->update('questionnaire_list', $tempArray);
 
-            $data[] = array(
-                'module_type' => 'm6' ,
-                'module_list_num' => $num,
-                'level_dsc' => '1',
-                'user_type' => 'B',
-                'html_dsc' => $this->input->post('contents_dsc'),
-                'up_date'=>$nowdate,
-            );
-
-            $this->db->insert_batch('leveldsc_list', $data);
+            //整理問卷物件，插入資料表
+            $t_array = array();
+            $item_area_num = $this -> input_data['item_area_num'];
+            if(is_array($item_area_num))
+            {
+                foreach ($item_area_num as $key => $num)
+                {
+                    $temp_data = array();
+                    $temp_data['title'] = $this -> input_data['item_title'][$key];
+                    $temp_data['type'] = $this -> input_data['item_type'][$key];
+                    $temp_data['items'] = array();
+                    if($temp_data['type'] == 'checkbox' )
+                    {
+                        $temp_data['items'] = $this -> input_data['checkbox_value_'. $num];
+                    }
+                    if($temp_data['type'] == 'radiobox')
+                    {
+                        $temp_data['items'] = $this -> input_data['radiobox_value_'. $num];
+                    }
+                    $t_array[] = $temp_data;
+                }
+            }
+            $tempArray = array();
+            $tempArray['item_data'] = json_encode($t_array);
+            $this->db->where('questionnaire_list_num',$this-> input_data['num']);
+            $this->db->update('questionnaire_data', $tempArray);
         }
 	}
 
