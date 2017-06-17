@@ -189,8 +189,8 @@ class Questionnaire_model extends CI_Model {
      *
      * @param $num
      */
-	public function del($num){
-		if( is_numeric($num) ){
+	public function del(){
+		if( $this -> input_data['num'] ){
 			$tArray = array(
 				'is_del'=>'1',
 			);
@@ -199,8 +199,8 @@ class Questionnaire_model extends CI_Model {
 				$this->db->where('user_type','teacher');	
 				$this->db->where('user_num',$this->session->userdata("userID"));			
 			}
-			$this->db->where('num',$num);
-			$this->db->update('module_list', $tArray); 
+			$this->db->where('num', $this -> input_data['num']);
+			$this->db->update('questionnaire_list', $tArray);
 		}
 	}
 }
