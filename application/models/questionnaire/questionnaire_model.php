@@ -5,6 +5,8 @@
 class Questionnaire_model extends CI_Model {
     private $input_data = array(
         'num' => null,
+        'user_type' => null,
+        'user_num' => null,
     );
 
 	public function __construct() {
@@ -247,5 +249,33 @@ class Questionnaire_model extends CI_Model {
         }
 
         return $return_Array;
+    }
+
+    /**
+     * 新增問卷開放設定
+     */
+    public function insert_open_data()
+    {
+        if( !is_null($this->input_data['user_type'])
+            AND !is_null($this->input_data['user_num'])
+        )
+        {
+            $tempArray = array();
+            $tempArray['user_type'] = $this -> input_data['user_type'];
+            $tempArray['user_num'] = $this -> input_data['user_num'];
+            $tempArray['questions_num'] = $this -> input_data['questions_num'];
+            $tempArray['school_num'] = $this -> input_data['school_num'];
+            $tempArray['teacher_num'] = $this -> input_data['teacher_num'];
+            $tempArray['class_num'] = $this -> input_data['class_num'];
+            $tempArray['begin_date'] = $this -> input_data['begin_date'];
+            $tempArray['end_date'] = $this -> input_data['end_date'];
+            $tempArray['up_date'] = date("Y-m-d H:i",time());
+            $this->db->insert('questionnaire_class_list', $tempArray);
+            $this->db->insert_id();
+
+            return 'success';
+        }
+
+        return 'error';
     }
 }
