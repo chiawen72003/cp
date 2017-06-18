@@ -39,7 +39,25 @@ class Classlist_model extends CI_Model {
 
 		
 	}
-	
+
+    /**
+     * 回傳num與班級組合的資料
+     *
+     * @return array
+     */
+    public function get_class_name_data(){
+        $return_Array = array();
+        $query = $this->db->get('class_list')->result();
+
+        foreach( $query as $row ){
+            $return_Array[$row->num] = $row->year_dsc.'年'.$row->class_dsc.'班';
+        }
+
+        return $return_Array;
+
+
+    }
+
 	public function getClassPeople($getData){
 		$return_Array = array();
 		$whereInArray = array();
