@@ -3,7 +3,7 @@
         <!--模組名稱搜尋：<input type="text" name="s_word" id="s_word" value="" ><a class="button" title="模組名稱搜尋：" onclick="search_word()">搜尋</a><a href="index.php" class="button" title="清除搜尋" >清除搜尋</a>-->
     </div>
     <ul>
-        <li><a class="button" title="新增模組" href="<?php echo  site_url('questionnaire/add_open_Page'); ?>">新增開放問卷</a></li>
+        <li><a class="button" title="新增模組" href="<?php echo  site_url('questionnaire/addOpenPage'); ?>">新增開放問卷</a></li>
     </ul>
     <table class="title">
         <tbody>
@@ -12,7 +12,8 @@
             <td width="30%">問卷標題</td>
             <td width="10%">學校名稱</td>
             <td width="10%">班級名稱</td>
-            <td width="20%">開放時間</td>
+            <td width="10%">起始時間</td>
+            <td width="10%">結束時間</td>
             <td width="25%">功能設定</td>
         </tr>
         </tbody>
@@ -27,11 +28,14 @@
             ?>
                 <tr>
                     <td width="5%"><?php echo $k+1;?></td>
-                    <td width="50%"><?php echo $v['title_dsc'];?></td>
-                    <td width="45%">
-                        <a class="button" title="開放管理" href="<?php echo  site_url("questionnaire/openList");?>?pg=<?php echo $offsetDsc;?>&num=<?php echo $v['num'];?>">開放管理</a>
-                        <a class="button" title="編輯" href="<?php echo  site_url("questionnaire/edit_Page/");?>?pg=<?php echo $offsetDsc;?>&num=<?php echo $v['num'];?>">編輯</a>
-                        <a class="button" title="刪除" onclick="del('<?php echo $v['num']; ?>','<?php echo $v['title_dsc'];?>')">刪除</a>
+                    <td width="30%"><?php echo isset($quation_title[$v['questions_num']])?$quation_title[$v['questions_num']]:'';?></td>
+                    <td width="10%"><?php echo isset($school[$v['school_num']])?$school[$v['school_num']]:'';?></td>
+                    <td width="10%"><?php echo isset($class_data[$v['class_num']])?$class_data[$v['class_num']]:'';?></td>
+                    <td width="10%"><?php echo $v['begin_date'];?></td>
+                    <td width="10%"><?php echo $v['end_date'];?></td>
+                    <td width="25%">
+                        <a class="button" title="編輯" href="<?php echo  site_url("questionnaire/edidOpenPage/");?>?pg=<?php echo $offsetDsc;?>&num=<?php echo $v['num'];?>">編輯</a>
+                        <a class="button" title="刪除" onclick="del('<?php echo $v['num']; ?>')">刪除</a>
                     </td>
                 </tr>
             <?php
@@ -45,10 +49,10 @@
 </div>
 <script>
     //刪除一個問卷
-    function del(key_num,unit_dsc){
-        if(confirm("確定刪除嗎?\r\n"+unit_dsc)){
+    function del(key_num){
+        if(confirm("確定刪除嗎?\r\n")){
             $.ajax({
-                url: '<?php echo  site_url('questionnaire/del'); ?>',
+                url: '<?php echo  site_url('questionnaire/delOpenData'); ?>',
                 type:"POST",
                 data: {keyNum:key_num},
                 error: function(xhr) {
