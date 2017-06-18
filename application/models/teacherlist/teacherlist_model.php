@@ -39,7 +39,23 @@ class Teacherlist_model extends CI_Model {
 		
 	}
 
-	public function getSchoolData(){
+    /**
+     * 所有教師num跟姓名的資料
+     *
+     * @return mixed
+     */
+    public function getNameData(){
+        $returnArray = array();
+        $query = $this->db->get('teacher_data')->result();
+        foreach( $query as $row ){
+            $return_Array[ $row->num ] = $row->c_name;
+        }
+
+        return $return_Array;
+    }
+
+
+    public function getSchoolData(){
 		$returnArray = array();
 		$query = $this->db->get('school_list')->result();
 		foreach( $query as $row ){
