@@ -274,6 +274,9 @@ class Questionnaire extends CI_Controller
 
         //取出所需資料
         $data['listData'] = $this->questionnaire_model->get_open_data($whereArray, $limitDsc, $offsetDsc, $orderByArray);
+        $data['quation_title'] = $this->questionnaire_model->getTitleData();
+        $data['school'] = $this->teacherlist_model->getSchoolData();
+        $data['class_data'] = $this -> classlist_model -> get_class_name_data();
         $data['pagination'] = $this->pagination->create_links();//ci產生的分頁html code
 
         $this->layout->view('questionnaire/open/index', $data);
@@ -282,7 +285,7 @@ class Questionnaire extends CI_Controller
     /**
      * 問卷開放時間的新增頁面
      */
-    public function add_open_Page(){
+    public function addOpenPage(){
 
         $this->load->library('layout');//套用樣板為layout_main
         if ($this->session->userdata("loginType") == "teacher") {
@@ -333,5 +336,52 @@ class Questionnaire extends CI_Controller
         $result = $t_obj->insert_open_data();
 
         echo $result;
+    }
+
+    /**
+     * 問卷開放時間的編輯頁面
+     */
+    public function editOpenPage(){
+
+        $this->load->library('layout');//套用樣板為layout_main
+        if ($this->session->userdata("loginType") == "teacher") {
+            $this->layout->setLayout('layout/back/layout_ta');//套用樣板
+        }
+        if ($this->session->userdata("loginType") == "root") {
+            $this->layout->setLayout('layout/back/layout_root');//套用樣板
+        }
+
+        $data = array();
+        $data['base'] = $this->config->item('base_url');
+        $data['school'] = null;
+        $data['class'] = null;
+        $data['teacher'] = null;
+        if($this->session->userdata("loginType") == "root")
+        {
+            $t_obj = new teacherlist_model();
+            $data['school'] = $t_obj -> getSchoolData();
+            $data['teacher'] = $t_obj -> getListData(array('is_del' => 0));
+            $t_obj = new Classlist_model();
+            $data['class_data'] = $t_obj -> getListData();
+            $t_obj = new Questionnaire_model();
+            $data['q_data'] = $t_obj -> getListData();
+
+            $this->layout->view('questionnaire/open/add_page_root', $data);
+        }
+    }
+
+    /**
+     * 刪除一筆問卷開放的資料
+     */
+    public function delOpenData(){
+        $result = 'error';
+        $num = $this->input->post('keyNum');
+        if (is_numeric($num)) {
+            $data = array('num' => $num);
+            $this -> questionnaire_model -> init($data);
+            $result = $this -> questionnaire_model -> del_open_data();
+        }
+
+        return  $result;
     }
 }
