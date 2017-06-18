@@ -10,6 +10,8 @@ class Questionnaire extends CI_Controller
         $this->load->library(array('session'));
         $this->load->helper(array('url', 'form'));
         $this->load->model('questionnaire/questionnaire_model');
+        $this->load->model('teacherlist/teacherlist_model');
+        $this->load->model('classlist/classlist_model');
         $this->load->model('publicfunction/sqlfunction', 'sqlfunction');
         if ($this->session->userdata("loginType") == "root" || $this->session->userdata("loginType") == "teacher") {
 
@@ -274,6 +276,62 @@ class Questionnaire extends CI_Controller
         $data['listData'] = $this->questionnaire_model->get_open_data($whereArray, $limitDsc, $offsetDsc, $orderByArray);
         $data['pagination'] = $this->pagination->create_links();//ci產生的分頁html code
 
-        $this->layout->view('questionnaire/open_list', $data);
+        $this->layout->view('questionnaire/open/index', $data);
+    }
+
+    /**
+     * 問卷開放時間的新增頁面
+     */
+    public function add_open_Page(){
+
+        $this->load->library('layout');//套用樣板為layout_main
+        if ($this->session->userdata("loginType") == "teacher") {
+            $this->layout->setLayout('layout/back/layout_ta');//套用樣板
+        }
+        if ($this->session->userdata("loginType") == "root") {
+            $this->layout->setLayout('layout/back/layout_root');//套用樣板
+        }
+
+        $data = array();
+        $data['base'] = $this->config->item('base_url');
+        $data['school'] = null;
+        $data['class'] = null;
+        $data['teacher'] = null;
+        if($this->session->userdata("loginType") == "root")
+        {
+            $t_obj = new teacherlist_model();
+            $data['school'] = $t_obj -> getSchoolData();
+            $data['teacher'] = $t_obj -> getListData(array('is_del' => 0));
+            $t_obj = new Classlist_model();
+            $data['class_data'] = $t_obj -> getListData();
+            $t_obj = new Questionnaire_model();
+            $data['q_data'] = $t_obj -> getListData();
+
+            $this->layout->view('questionnaire/open/add_page_root', $data);
+        }
+
+
+
+    }
+
+    /**
+     * 新增 問卷開放資料
+     */
+    public function insertOpenData(){
+
+        $data = $this->input->post();
+        if ($this->session->userdata("loginType") == "teacher") {
+            $data['user_type'] = 'teacher';
+            $data['user_num'] = $this->session->userdata("userID");
+        }
+        if ($this->session->userdata("loginType") == "root") {
+            $data['user_type'] = 'root';
+            $data['user_num'] = '0';
+        }
+        $t_obj = new Questionnaire_model();
+        $t_obj->init($data);
+        $result = $t_obj->insert_open_data();
+
+        echo $result;
     }
 }
