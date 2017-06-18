@@ -71,14 +71,9 @@ class Questionnaire_model extends CI_Model {
             foreach( $query as $row ){
                 $t['title_dsc'] = $row ->title_dsc;
                 $t['contents_dsc'] = $row ->contents_dsc;
-                $t['item_data'] = '';
-
-                $this->db->where('questionnaire_list_num', $this->input_data['num']);
-                $query2 = $this->db->get('questionnaire_data')->result();
-                foreach( $query2 as $row2 ){
-                    $t['item_data'] = $row2 -> item_data;
-                }
+                $t['item_data'] = $row ->item_data;
             }
+
         }
 
         return $t;
@@ -101,8 +96,6 @@ class Questionnaire_model extends CI_Model {
         if($this->session->userdata("loginType") == "root"){
             $tempArray['user_type'] = 'root';
         }
-        $this->db->insert('questionnaire_list', $tempArray);
-        $getID = $this->db->insert_id();
 
         //整理問卷物件，插入資料表
         $t_array = array();
@@ -126,10 +119,9 @@ class Questionnaire_model extends CI_Model {
                 $t_array[] = $temp_data;
             }
         }
-        $tempArray = array();
-        $tempArray['questionnaire_list_num'] = $getID;
         $tempArray['item_data'] = json_encode($t_array);
-        $this->db->insert('questionnaire_data', $tempArray);
+        $this->db->insert('questionnaire_list', $tempArray);
+        $this->db->insert_id();
     }
 
     /**
@@ -152,8 +144,6 @@ class Questionnaire_model extends CI_Model {
             if($this->session->userdata("loginType") == "root"){
                 $tempArray['user_type'] = 'root';
             }
-            $this->db->where('num',$this-> input_data['num']);
-            $this->db->update('questionnaire_list', $tempArray);
 
             //整理問卷物件，插入資料表
             $t_array = array();
@@ -177,10 +167,9 @@ class Questionnaire_model extends CI_Model {
                     $t_array[] = $temp_data;
                 }
             }
-            $tempArray = array();
             $tempArray['item_data'] = json_encode($t_array);
-            $this->db->where('questionnaire_list_num',$this-> input_data['num']);
-            $this->db->update('questionnaire_data', $tempArray);
+            $this->db->where('num',$this-> input_data['num']);
+            $this->db->update('questionnaire_list', $tempArray);
         }
 	}
 
@@ -203,4 +192,22 @@ class Questionnaire_model extends CI_Model {
 			$this->db->update('questionnaire_list', $tArray);
 		}
 	}
+
+	/**
+     * 增加 學生作答的問卷資料
+     */
+    public function insert_questionnaire_data(){
+        if( $this -> input_data['num'] ){
+            $tempArray = array();
+            $tempArray['questionnaire_list_num'] = $this -> input_data['num'];
+            $tempArray['student_num'] = $this->session->userdata("userID");
+            $t_array = $this -> input_data;
+            unset($t_array['num']);
+            $tempArray['ans_data'] = json_encode($t_array);
+            $tempArray['up_date'] = date("Y-m-d H:i",time());
+            $this->db->insert('questionnaire_data', $tempArray);
+            $this->db->insert_id();
+        }
+    }
+
 }
