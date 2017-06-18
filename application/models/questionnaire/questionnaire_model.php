@@ -61,6 +61,27 @@ class Questionnaire_model extends CI_Model {
 	}
 
     /**
+     * 取得問卷num跟title組合的資料
+     *
+     * @param string $whereArray
+     * @param string $limitDsc
+     * @param string $offsetDsc
+     * @param string $orderByArray
+     * @return array
+     */
+    public function getTitleData(){
+        $return_Array = array();
+        $query = $this->db->get('questionnaire_list')->result();
+
+        foreach( $query as $row ){
+            $return_Array[$row->num] = $row->title_dsc;
+        }
+
+        return $return_Array;
+    }
+
+
+    /**
      * 取得單一問卷的設定資料
      */
 	public function get_data()
@@ -272,6 +293,28 @@ class Questionnaire_model extends CI_Model {
             $tempArray['up_date'] = date("Y-m-d H:i",time());
             $this->db->insert('questionnaire_class_list', $tempArray);
             $this->db->insert_id();
+
+            return 'success';
+        }
+
+        return 'error';
+    }
+
+
+    /**
+     * 刪除問卷資料
+     *
+     * @param $num
+     */
+    public function del_open_data(){
+        if( $this -> input_data['num'] ){
+            $data = array(
+                'num' => $this -> input_data['num'],
+            );
+            if ($this->session->userdata("loginType") == "teacher") {
+                $data['teacher_num'] = $this->session->userdata("userID");
+            }
+            $this -> db -> delete('questionnaire_class_list', $data);
 
             return 'success';
         }
