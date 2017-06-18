@@ -97,10 +97,12 @@ class Questionnaire extends CI_Controller
         $data = array();
         $data['base'] = $this->config->item('base_url');
         $num = $this->input->get('num');
+        $data['num'] = $num;
         $t_obj = new Questionnaire_model();
-        $t_obj -> init(array('num', $num));
-        $data['q_dat'] = $t_obj -> get_data();
+        $t_obj -> init(array('num'=>$num));
+        $data['q_data'] = $t_obj -> get_data();
         $this->layout->setLayout('layout/front/questionnaire_layout');//套用樣板
+
         $this->layout->view('questionnaire/do_page', $data);
     }
 
@@ -192,5 +194,18 @@ class Questionnaire extends CI_Controller
             $t_obj->init(array('num' => $num));
             $t_obj->del();
         }
+    }
+
+    /**
+     * 新增 學生作答的問卷資料
+     */
+    public function insert_data()
+    {
+        $data = $this->input->post();
+        $t_obj = new Questionnaire_model();
+        $t_obj->init($data);
+        $t_obj->insert_questionnaire_data();
+
+        redirect('/questionnaire/do_page?num='.$data['num']);
     }
 }
