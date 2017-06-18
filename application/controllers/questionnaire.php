@@ -58,8 +58,8 @@ class Questionnaire extends CI_Controller
             $data['offsetDsc'] = $offsetDsc;
         }
 
-        $allNum = $this->sqlfunction->get_allDataNum('module_list', $whereArray);//總資料數量
-        $config['base_url'] = $data['base'] . 'index.php/modellist/index/?xx=';
+        $allNum = $this->sqlfunction->get_allDataNum('questionnaire_list', $whereArray);//總資料數量
+        $config['base_url'] = $data['base'] . 'index.php/questionnaire/index/?xx=';
         $config['total_rows'] = $allNum;
         $config['per_page'] = $limitDsc;
         $config['page_query_string'] = true;
@@ -207,5 +207,73 @@ class Questionnaire extends CI_Controller
         $t_obj->insert_questionnaire_data();
 
         redirect('/questionnaire/do_page?num='.$data['num']);
+    }
+
+    /**
+     * 問卷開放時間列表
+     */
+    public function openList()
+    {
+        $this->load->library('pagination');
+        $this->load->library('layout');//套用樣板為layout_main
+        if ($this->session->userdata("loginType") == "teacher") {
+            $this->layout->setLayout('layout/back/layout_ta');//套用樣板
+        }
+        if ($this->session->userdata("loginType") == "root") {
+            $this->layout->setLayout('layout/back/layout_root');//套用樣板
+        }
+
+        $data = array();
+        $data['base'] = $this->config->item('base_url');
+
+        //處理分頁
+        $whereArray = array(
+        );
+        if ($this->session->userdata("loginType") == "teacher") {
+            $whereArray['user_type'] = 'teacher';
+            $whereArray['user_num'] = $this->session->userdata("userID");
+        }
+        if ($this->session->userdata("loginType") == "root") {
+            $whereArray['user_type'] = 'root';
+        }
+
+        $orderByArray = array('num' => 'DESC');
+        $offsetDsc = 0;//目前頁面數
+        $limitDsc = 10;//一頁顯示幾筆資料
+        $data['offsetDsc'] = '';
+
+        if (is_numeric($this->input->get('per_page'))) {
+            $offsetDsc = $this->input->get('per_page');
+            $data['offsetDsc'] = $offsetDsc;
+        }
+
+        $allNum = $this->sqlfunction->get_allDataNum('questionnaire_class_list', $whereArray);//總資料數量
+        $config['base_url'] = $data['base'] . 'index.php/questionnaire/openList/?xx=';
+        $config['total_rows'] = $allNum;
+        $config['per_page'] = $limitDsc;
+        $config['page_query_string'] = true;
+        /* 		$config['full_tag_open'] = '<ul class="pagination">';
+                $config['full_tag_close'] = '</ul>';
+                $config['cur_tag_open'] = '<li class="current"><a>';//目前頁面左邊標籤。
+                $config['cur_tag_close'] = '</a></li>';//目前頁面右邊標籤。
+                $config['num_tag_open'] = '<li>';//分頁數字連結左邊標籤。
+                $config['num_tag_close'] = '</li>';//分頁數字連結右邊標籤。
+                $config['next_tag_open'] = '<li class="arrow">';//下一頁連結左邊標籤。
+                $config['next_tag_close'] = '</li>';//下一頁連結右邊標籤。
+                $config['prev_tag_open'] = '<li class="arrow unavailable">';//上一頁連結左邊標籤。
+                $config['prev_tag_close'] = '</li>';//上一頁連結右邊標籤。
+                $config['next_tag_open'] = '<li class="arrow">';//下一頁連結左邊標籤。
+                $config['next_tag_close'] = '</li>';//下一頁連結右邊標籤。
+                $config['first_tag_open'] = '<li >';//第一頁連結左邊標籤。
+                $config['first_tag_close'] = '</li>';//第一頁連結右邊標籤。
+                $config['last_tag_open'] = '<li>';//最後一頁連結左邊標籤。
+                $config['last_tag_close'] = '</li>';//最後一頁連結右邊標籤。 */
+        $this->pagination->initialize($config);
+
+        //取出所需資料
+        $data['listData'] = $this->questionnaire_model->get_open_data($whereArray, $limitDsc, $offsetDsc, $orderByArray);
+        $data['pagination'] = $this->pagination->create_links();//ci產生的分頁html code
+
+        $this->layout->view('questionnaire/open_list', $data);
     }
 }
