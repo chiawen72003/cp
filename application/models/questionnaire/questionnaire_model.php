@@ -210,4 +210,42 @@ class Questionnaire_model extends CI_Model {
         }
     }
 
+    /*
+    * 取得問卷開放的資料
+    *
+    * @param string $whereArray
+    * @param string $limitDsc
+    * @param string $offsetDsc
+    * @param string $orderByArray
+    * @return array
+    */
+    public function get_open_data($whereArray='',$limitDsc='',$offsetDsc='',$orderByArray=''){
+        $return_Array = array();
+        if( is_array($whereArray) ){
+            foreach($whereArray as $key => $value ){
+                $this->db->where($key,$value);
+            }
+        }
+        if( is_array($orderByArray) ){
+            foreach($orderByArray as $key => $value ){
+                $this->db->order_by($key,$value);
+            }
+        }
+        if( $limitDsc>''  and $offsetDsc>'' )
+        {
+            $query = $this->db->get('questionnaire_class_list', $limitDsc, $offsetDsc)->result();
+        }else{
+            $query = $this->db->get('questionnaire_class_list')->result();
+        }
+
+        foreach( $query as $row ){
+            $tempArray = array();
+            foreach($row as $key => $value){
+                $tempArray[$key] = $value;
+            }
+            $return_Array[] = $tempArray;
+        }
+
+        return $return_Array;
+    }
 }
