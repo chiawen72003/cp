@@ -26,6 +26,7 @@
                     <td width="5%"><?php echo $k+1;?></td>
                     <td width="50%"><?php echo $v['title_dsc'];?></td>
                     <td width="45%">
+                        <a class="button" title="開放管理" href="<?php echo  site_url("questionnaire/openList");?>?pg=<?php echo $offsetDsc;?>&num=<?php echo $v['num'];?>">開放管理</a>
                         <a class="button" title="編輯" href="<?php echo  site_url("questionnaire/edit_Page/");?>?pg=<?php echo $offsetDsc;?>&num=<?php echo $v['num'];?>">編輯</a>
                         <a class="button" title="刪除" onclick="del('<?php echo $v['num']; ?>','<?php echo $v['title_dsc'];?>')">刪除</a>
                     </td>
