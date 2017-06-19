@@ -100,9 +100,8 @@ class Questionnaire extends CI_Controller
         $data['base'] = $this->config->item('base_url');
         $num = $this->input->get('num');
         $data['num'] = $num;
-        $t_obj = new Questionnaire_model();
-        $t_obj -> init(array('num'=>$num));
-        $data['q_data'] = $t_obj -> get_data();
+        $this -> questionnaire_model -> init(array('num'=>$num));
+        $data['q_data'] = $this->questionnaire_model-> get_data();
         $this->layout->setLayout('layout/front/questionnaire_layout');//套用樣板
 
         $this->layout->view('questionnaire/do_page', $data);
@@ -148,9 +147,8 @@ class Questionnaire extends CI_Controller
 
             $data = array();
             $data['base'] = $this->config->item('base_url');
-            $t_obj = new questionnaire_model();
-            $t_obj->init(array('num' => $getID));
-            $data['q_data'] = $t_obj->get_data();
+            $this -> questionnaire_model -> init(array('num' => $getID));
+            $data['q_data'] = $this -> questionnaire_model -> get_data();
             $data['num'] = $getID;
             $data['offsetDsc'] = $offsetDsc;
             $this->layout->view('questionnaire/edit_page', $data);
@@ -163,9 +161,8 @@ class Questionnaire extends CI_Controller
     public function add_data()
     {
         $all = $this->input->post();
-        $t_obj = new Questionnaire_model();
-        $t_obj->init($all);
-        $t_obj->insertData();
+        $this -> questionnaire_model ->init($all);
+        $this -> questionnaire_model ->insertData();
 
         redirect('/questionnaire/index?per_page=' . $offsetDsc, 'refresh');
 
@@ -177,9 +174,8 @@ class Questionnaire extends CI_Controller
     public function update_data()
     {
         $all = $this->input->post();
-        $t_obj = new Questionnaire_model();
-        $t_obj->init($all);
-        $t_obj->updateData();
+        $this -> questionnaire_model ->init($all);
+        $this -> questionnaire_model ->updateData();
 
         redirect('/questionnaire/index?per_page=' . $offsetDsc, 'refresh');
 
@@ -192,9 +188,8 @@ class Questionnaire extends CI_Controller
     {
         $num = $this->input->post('keyNum');
         if (is_numeric($num)) {
-            $t_obj = new Questionnaire_model();
-            $t_obj->init(array('num' => $num));
-            $t_obj->del();
+            $this -> questionnaire_model ->init(array('num' => $num));
+            $this -> questionnaire_model ->del();
         }
     }
 
@@ -204,9 +199,8 @@ class Questionnaire extends CI_Controller
     public function insert_data()
     {
         $data = $this->input->post();
-        $t_obj = new Questionnaire_model();
-        $t_obj->init($data);
-        $t_obj->insert_questionnaire_data();
+        $this -> questionnaire_model ->init(array($data));
+        $this -> questionnaire_model ->insert_questionnaire_data();
 
         redirect('/questionnaire/do_page?num='.$data['num']);
     }
@@ -302,13 +296,10 @@ class Questionnaire extends CI_Controller
         $data['teacher'] = null;
         if($this->session->userdata("loginType") == "root")
         {
-            $t_obj = new teacherlist_model();
-            $data['school'] = $t_obj -> getSchoolData();
-            $data['teacher'] = $t_obj -> getListData(array('is_del' => 0));
-            $t_obj = new Classlist_model();
-            $data['class_data'] = $t_obj -> getListData();
-            $t_obj = new Questionnaire_model();
-            $data['q_data'] = $t_obj -> getListData();
+            $data['school'] = $this -> teacherlist_model -> getSchoolData();
+            $data['teacher'] = $this -> teacherlist_model -> getListData(array('is_del' => 0));
+            $data['class_data'] = $this -> classlist_model -> getListData();
+            $data['q_data'] = $this -> questionnaire_model -> getListData();
 
             $this->layout->view('questionnaire/open/add_page_root', $data);
         }
@@ -331,9 +322,8 @@ class Questionnaire extends CI_Controller
             $data['user_type'] = 'root';
             $data['user_num'] = '0';
         }
-        $t_obj = new Questionnaire_model();
-        $t_obj->init($data);
-        $result = $t_obj->insert_open_data();
+        $this->questionnaire_model->init($data);
+        $result = $this->questionnaire_model->insert_open_data();
 
         echo $result;
     }
@@ -342,6 +332,7 @@ class Questionnaire extends CI_Controller
      * 問卷開放時間的編輯頁面
      */
     public function editOpenPage(){
+        $num = $this->input->get('num');
 
         $this->load->library('layout');//套用樣板為layout_main
         if ($this->session->userdata("loginType") == "teacher") {
@@ -356,19 +347,35 @@ class Questionnaire extends CI_Controller
         $data['school'] = null;
         $data['class'] = null;
         $data['teacher'] = null;
+        $where_array = array(
+            'num' => $num,
+        );
+
         if($this->session->userdata("loginType") == "root")
         {
-            $t_obj = new teacherlist_model();
-            $data['school'] = $t_obj -> getSchoolData();
-            $data['teacher'] = $t_obj -> getListData(array('is_del' => 0));
-            $t_obj = new Classlist_model();
-            $data['class_data'] = $t_obj -> getListData();
-            $t_obj = new Questionnaire_model();
-            $data['q_data'] = $t_obj -> getListData();
+            $t = $this -> questionnaire_model -> get_open_data($where_array);
+            $data['list_data'] = isset($t[0])?$t[0]:null;
+            $data['school'] = $this -> teacherlist_model -> getSchoolData();
+            $data['teacher'] = $this -> teacherlist_model -> getListData(array('is_del' => 0));
+            $data['class_data'] = $this -> classlist_model -> getListData();
+            $data['q_data'] = $this -> questionnaire_model -> getListData();
 
-            $this->layout->view('questionnaire/open/add_page_root', $data);
+            $this->layout->view('questionnaire/open/edit_page_root', $data);
         }
     }
+
+    /**
+     * 更新問卷資料
+     */
+    public function updateOpenData()
+    {
+        $data = $this->input->post();
+        $this -> questionnaire_model -> init($data);
+        $result = $this -> questionnaire_model -> update_open_data();
+
+        return $result;
+    }
+
 
     /**
      * 刪除一筆問卷開放的資料
