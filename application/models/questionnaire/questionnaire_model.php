@@ -302,6 +302,34 @@ class Questionnaire_model extends CI_Model {
 
 
     /**
+     * 更新問卷開放設定
+     */
+    public function update_open_data()
+    {
+        if( !is_null($this->input_data['num']) )
+        {
+            $tArray = array();
+            $tArray['questions_num'] = $this -> input_data['questions_num'];
+            $tArray['school_num'] = $this -> input_data['school_num'];
+            $tArray['teacher_num'] = $this -> input_data['teacher_num'];
+            $tArray['class_num'] = $this -> input_data['class_num'];
+            $tArray['begin_date'] = $this -> input_data['begin_date'];
+            $tArray['end_date'] = $this -> input_data['end_date'];
+            $tArray['up_date'] = date("Y-m-d H:i",time());
+            if ($this->session->userdata("loginType") == "teacher") {
+                $this->db->where('user_type', 'teacher');
+                $this->db->where('user_num', $this->session->userdata("userID"));
+            }
+            $this->db->where('num', $this -> input_data['num']);
+            $this->db->update('questionnaire_class_list', $tArray);
+
+            return 'success';
+        }
+
+        return 'error';
+    }
+
+    /**
      * 刪除問卷資料
      *
      * @param $num
