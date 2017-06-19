@@ -61,12 +61,12 @@ $(function() {
     $( ".datepicker" ).datepicker({dateFormat:"yy-mm-dd",});
 });
 
-    var dataIsSend = false;
+var dataIsSend = false;
 var school_obj = [];
 var teacher_obj = [];
 var class_obj = [];
 var quation_obj = [];
-<?
+<?php
     foreach($school as $key => $v)
     {
 ?>
@@ -80,7 +80,7 @@ var quation_obj = [];
     }
 ?>
 
-<?
+<?php
 foreach($teacher as $v)
 {
 ?>
@@ -94,7 +94,7 @@ teacher_obj.push(
 <?php
 }
 ?>
-<?
+<?php
 foreach($class_data as $v)
 {
 ?>
@@ -109,7 +109,7 @@ class_obj.push(
 <?php
 }
 ?>
-<?
+<?php
 foreach($q_data as $v)
 {
 ?>
@@ -239,7 +239,7 @@ function chkValue(){
             },
             success: function(response) {
                alert('新增完畢!!');
-               history.back();
+                window.location.replace(document.referrer);
             }
         });
 	}
