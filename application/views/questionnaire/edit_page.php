@@ -125,7 +125,7 @@
     </div>
     <div class="add-wrap">
         <!-- 單選 -->
-        <div class="form-area" id="sample_checkbox">
+        <div class="form-area" id="sample_radiobox">
             <input type="hidden" id="item_area_num" name="item_area_num[]" value="">
             <div class="form-area-drag"><i class="material-icons">drag_handle</i></div>
             <div class="form-group form-group-title">
@@ -155,22 +155,22 @@
                 </div>
             </div>
         </div>
-            <!-- 單選 checkbox 物件 -->
-            <div class="form-group-list-li" id="sample_checkbox_item">
+            <!-- 單選 radio 物件 -->
+            <div class="form-group-list-li" id="sample_radiobox_item">
                 <div class="form-group-list-li__click">
                     <input type="radio" class="form-radio" name="iCheck" disabled>
                 </div>
                 <div class="form-group-list-li__input">
-                    <input type="text" class="form-control" placeholder="選項名稱" required id="sample_checkbox_value" />
+                    <input type="text" class="form-control" placeholder="選項名稱" required id="sample_radiobox_value" />
                 </div>
                 <div class="form-group-list-li__del">
                     <a id="del_item"><i class="material-icons">close</i></a>
                 </div>
             </div>
-            <!-- 單選 checkbox 物件 end -->
+            <!-- 單選 radio 物件 end -->
         <!-- 單選 end -->
         <!-- 多選 -->
-        <div class="form-area" id="sample_radiobox">
+        <div class="form-area" id="sample_checkbox">
             <input type="hidden" id="item_area_num" name="item_area_num[]" value="">
             <div class="form-area-drag"><i class="material-icons">drag_handle</i></div>
             <div class="form-group form-group-title">
@@ -199,19 +199,19 @@
                 </div>
             </div>
         </div>
-            <!-- 多選 radiobox 物件 -->
-        <div class="form-group-list-li" id="sample_radiobox_item">
+            <!-- 多選 checkbox 物件 -->
+        <div class="form-group-list-li" id="sample_checkbox_item">
                 <div class="form-group-list-li__click">
                     <input type="checkbox" class="form-checkbox" name="iCheck" disabled>
                 </div>
                 <div class="form-group-list-li__input">
-                    <input type="text" class="form-control" placeholder="選項名稱" required id="sample_radiobox_value" />
+                    <input type="text" class="form-control" placeholder="選項名稱" required id="sample_checkbox_value" />
                 </div>
                 <div class="form-group-list-li__del">
                     <a id="del_item"><i class="material-icons">close</i></a>
                 </div>
             </div>
-            <!-- 多選 radiobox 物件 end -->
+            <!-- 多選 checkbox 物件 end -->
         <!-- 多選 end -->
     </div>
     <div class="add-wrap">
