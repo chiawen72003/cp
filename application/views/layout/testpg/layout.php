@@ -456,7 +456,7 @@ $('#msgInput').keydown(function(e){
 <div id="wraper">
 	<!--聊天框-->
 	<div id="talk">
-		<a href="#" class="t_btnBack">回上一頁</a>
+		<a onclick="history.back()" class="t_btnBack">回上一頁</a>
 		<div class="t_message">
 			<div class="speak-1" id="chatRoom" rows="30" cols="30"></div>
 			<div class="t_but">
