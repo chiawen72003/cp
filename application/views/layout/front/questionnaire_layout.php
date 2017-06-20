@@ -14,8 +14,5 @@
 //此處插入資料
 echo $content_for_layout;//顯示view的區塊
 ?>
-<script src="<?php echo base_url('public/js/questionnaire/jquery.js'); ?>"> </script>
-<script src="<?php echo base_url('public/js/icheck.js'); ?>"> </script>
-<script src="<?php echo base_url('public/js/main.js'); ?>"> </script>
 </body>
 </html>
