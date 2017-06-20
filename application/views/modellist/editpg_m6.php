@@ -19,7 +19,10 @@
 					<td style="background-color:#E4DEE9;">
 						題目內容<br>
 					</td>
-				</tr>				
+					<td style="background-color:#B2DDE6;">
+						模組初始化設定<br>
+					</td>
+				</tr>
 			</table>
 		</div>
 	</div>
@@ -112,7 +115,14 @@ echo form_open_multipart('modellist/setModelData', $attributes,$hidden);
 			<td style="background-color:#E4DEE9;">題目內容
 				<textarea name="contents_dsc" id="contents_dsc" ><?php echo isset($levelDsc['1']['A'])?$levelDsc['1']['A']:'';?></textarea>
                 <a class="button" title="上一步驟" onclick="changeArea('tr_title')">上一步驟</a>
-                <a class="button" title="存檔" onclick="chkValue()">存檔</a>
+				<a class="button" title="下一步驟" onclick="changeArea('tr_build_option')">下一步驟</a>
+			</td>
+		</tr>
+		<tr id="tr_build_option" style="display:none;">
+			<td style="background-color:#B2DDE6;">模組初始化設定[模組不需初始化資料時，不需設定此項目]
+				<textarea name="build_option" id="build_option" ><?php echo isset($modelsData['build_option'])?$modelsData['build_option']:'[]';?></textarea>
+				<a class="button" title="上一步驟" onclick="changeArea('tr_content')">上一步驟</a>
+				<a class="button" title="存檔" onclick="chkValue()">存檔</a>
 			</td>
 		</tr>
 	</table>
@@ -123,7 +133,7 @@ echo form_close();
 </div>
 <script>
 var dataIsSend = false;
-var tr_array = ['tr_title','tr_content'];
+var tr_array = ['tr_title', 'tr_content', 'tr_build_option'];
 
 function chkValue(){
 	var isGo = true;
