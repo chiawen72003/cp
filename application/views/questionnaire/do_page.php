@@ -136,6 +136,31 @@
             </div>
         <!-- 多選 物件 end -->
     <!-- 多選 end -->
+
+    <!-- 分數 -->
+    <div class="form-area" id="sample_number">
+        <div class="form-area-drag"><i class="material-icons">drag_handle</i></div>
+        <div class="form-group form-group-title">
+            <div class="title" id="sample_title">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-group-list" id="number_input_area">
+            </div>
+        </div>
+    </div>
+    <!-- 分數 物件 -->
+    <div class="form-group-list-li" id="sample_number_item">
+        <div class="form-group-list-li__click">
+            <input type="radio" class="form-radio" name="" id="number_input">
+        </div>
+        <div class="form-group-list-li__input">
+            <div class="form-group-list-li_name" id="number_dsc"></div>
+        </div>
+    </div>
+    <!-- 分數 物件 end -->
+
+    <!-- 分數 end -->
 </div>
 <script src="<?php echo base_url('public/js/questionnaire/jquery.js'); ?>"> </script>
 <script src="<?php echo base_url('public/js/icheck.js'); ?>"> </script>
@@ -172,6 +197,14 @@
                     for(var y=0; y<sub_item_num; y++)
                     {
                        add_radio_item(x, items[x]['items'][y]);
+                    }
+                }
+                if(items[x]['type'] == 'number')
+                {
+                    var sub_item_num =  items[x]['items'].length;
+                    for(var y=0; y<items[x]['items'][0].length; y++)
+                    {
+                        add_number_item(x, items[x]['items'][0][y], items[x]['items'][1][y]);
                     }
                 }
             }
@@ -221,6 +254,18 @@
 
             $('#item_insert_area').append(t_obj);
         }
+
+        //分數
+        if(item_type == 'number')
+        {
+            var t_obj = $('#sample_number').clone();
+            t_obj.find('#sample_title').attr('id', '').append(item_title);
+            t_obj.find('#sample_input').attr('id', '').attr('name', 'item_'+item_num);
+            t_obj.find('#number_input_area').attr('id', 'number_input_area_'+item_num);
+
+            $('#item_insert_area').append(t_obj);
+        }
+
         item_num++;
     }
 
@@ -252,6 +297,18 @@
         radio_item.attr('id', '');
         $('#radio_input_area_' + item_num).append(radio_item);
     }
+
+    /**
+     * 增加一個number物件
+     */
+    function add_number_item(item_num, get_title = '', get_val = '') {
+        var number_item = $('#sample_number_item').clone();
+        number_item.find('#number_input').attr('name', 'item_' + item_num ).attr('id', '').val(get_val);
+        number_item.find('#number_dsc').append(get_title);
+        number_item.attr('id', '');
+        $('#number_input_area_' + item_num).append(number_item);
+    }
+
 
     /**
      * 送出問卷資料
