@@ -33,7 +33,7 @@
                         if($v['user_num'] == $teacher['num'])
                         {
                             ?>
-                            <option value="<?php echo $v['num'];?>" <?php ($v['num'] == $list_data['class_num'])?'selected':''?>><?php echo $v['year_dsc'].'年'.$v['class_dsc'].'班';?></option>
+                            <option value="<?php echo $v['num'];?>" <?php echo ($v['num'] == $list_data['class_num'])?'selected':''?>><?php echo $v['year_dsc'].'年'.$v['class_dsc'].'班';?></option>
                             <?php
                         }
                     }
@@ -48,7 +48,7 @@
                     <?php
                     foreach($q_data as $v) {
                         ?>
-                        <option value="<?php echo $v['num'];?>" <?php ($v['num'] == $list_data['questions_num'])?'selected':''?>><?php echo $v['title_dsc'];?></option>
+                        <option value="<?php echo $v['num'];?>" <?php echo  ($v['num'] == $list_data['questions_num'])?'selected':''?>><?php echo $v['title_dsc'];?></option>
                         <?php
                     }
                     ?>
