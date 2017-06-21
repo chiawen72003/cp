@@ -78,6 +78,7 @@
                         <option value="simple_ans" selected>簡答</option>
                         <option value="detailed">段落</option>
                         <option value="radiobox">單選</option>
+                        <option value="number" >分數</option>
                         <option value="checkbox">多選</option>
                     </select>
                 </div>
@@ -107,6 +108,7 @@
                         <option value="simple_ans" >簡答</option>
                         <option value="detailed" selected>段落</option>
                         <option value="radiobox">單選</option>
+                        <option value="number" >分數</option>
                         <option value="checkbox">多選</option>
                     </select>
                 </div>
@@ -137,6 +139,7 @@
                         <option value="simple_ans" >簡答</option>
                         <option value="detailed" >段落</option>
                         <option value="radiobox" selected>單選</option>
+                        <option value="number" >分數</option>
                         <option value="checkbox">多選</option>
                     </select>
                 </div>
@@ -182,6 +185,7 @@
                         <option value="simple_ans" >簡答</option>
                         <option value="detailed" >段落</option>
                         <option value="radiobox" >單選</option>
+                        <option value="number" >分數</option>
                         <option value="checkbox" selected>多選</option>
                     </select>
                 </div>
@@ -213,6 +217,55 @@
             </div>
             <!-- 多選 checkbox 物件 end -->
         <!-- 多選 end -->
+
+        <!-- 分數-->
+        <div class="form-area" id="sample_number">
+            <input type="hidden" id="item_area_num" name="item_area_num[]" value="">
+            <div class="form-area-drag"><i class="material-icons">drag_handle</i></div>
+            <div class="form-group form-group-title">
+                <div class="form-inline s9">
+                    <input type="text" class="form-control form-title questionnaire-h2" placeholder="未命名分數問題" id="sample_title" name="item_title[]">
+                </div>
+                <div class="form-inline s1">
+                    <select class="form-control form-title-select s1" id="sample_type" name="item_type[]">
+                        <option value="simple_ans" >簡答</option>
+                        <option value="detailed" >段落</option>
+                        <option value="radiobox" >單選</option>
+                        <option value="number" selected>分數</option>
+                        <option value="checkbox">多選</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-group-list">
+
+                    <div class="form-group-list-li" id="sample_add_area">
+                        <div class="form-group-list-li__click">
+                            <input type="radio" class="form-radio" name="iCheck" disabled>
+                        </div>
+                        <div class="form-group-list-li__input">
+                            <a id="add_itme" onclick="" class="form-group-list-li_name">新增選項</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 分數 radio 物件 -->
+        <div class="form-group-list-li" id="sample_number_item">
+            <div class="form-group-list-li__click">
+                <input type="radio" class="form-radio" name="iCheck" disabled>
+            </div>
+            <div class="form-group-list-li__input">
+                <input type="text" class="form-control" placeholder="選項名稱" required id="sample_number_title" />
+                <input type="text" class="form-control" placeholder="分數" required id="sample_number_value" />
+            </div>
+            <div class="form-group-list-li__del">
+                <a id="del_item"><i class="material-icons">close</i></a>
+            </div>
+        </div>
+        <!-- 分數 radio 物件 end -->
+        <!-- 分數 end -->
+
     </div>
     <div class="add-wrap">
         <!-- 新增區塊無內容 -->
@@ -270,6 +323,21 @@
                     for(var y=0; y<sub_item_num; y++)
                     {
                         add_radiobox_item(x, items[x]['items'][y]);
+                    }
+                }
+
+                if(items[x]['type'] == 'number')
+                {
+                    var sub_item_num =  items[x]['items'].length;
+                    //如果有物件，先清掉系統預設給的物件，否則會多一組資料出來
+                    if(sub_item_num > 0)
+                    {
+                        var t_obj = $('#item_num_'+x).find('.form-group-list-li').first().remove();
+                    }
+
+                    for(var y=0; y<items[x]['items'][0].length; y++)
+                    {
+                        add_number_item(x, items[x]['items'][0][y], items[x]['items'][1][y]);
                     }
                 }
             }
@@ -370,6 +438,20 @@
             $('#old_item_obj').before(t_obj).remove();
             add_radiobox_item(get_num);
         }
+        //分數
+        if(item_type == 'number')
+        {
+            var t_obj = $('#sample_number').clone();
+            t_obj.find('#item_area_num').attr('id', '').val(get_num);
+            t_obj.attr('id','item_num_'+ get_num);
+            t_obj.find('#sample_type').attr('id', 'item_type_' + get_num).attr('onchange','change_type("' + get_num +'")');
+            t_obj.find('#sample_title').attr('id', 'item_title_' + get_num).val(item_title);
+            t_obj.find('#sample_add_area').attr('id', 'number_add_' + get_num);
+            t_obj.find('#add_itme').attr('id', '').attr('onclick', 'add_number_item("'+ get_num +'")');
+            $('#item_num_'+ get_num).attr('id','old_item_obj');
+            $('#old_item_obj').before(t_obj).remove();
+            add_number_item(get_num);
+        }
     }
 
     /**
@@ -398,4 +480,18 @@
         radiobox_item_num++;
     }
 
+
+    /**
+     * 增加一個number物件
+     */
+    var number_item_num = 0;
+    function add_number_item(get_num, get_title = '', get_val='') {
+        var number_item = $('#sample_number_item').clone();
+        number_item.find('#sample_number_title').attr('name', 'number_title_' + get_num + '[]').attr('id', '').val(get_title);
+        number_item.find('#sample_number_value').attr('name', 'number_value_' + get_num + '[]').attr('id', '').val(get_val);
+        number_item.find('#del_item').attr('onclick', '$("#number_item_'+ number_item_num +'").remove()').attr('id', '');
+        number_item.attr('id', 'number_item_' + number_item_num);
+        $('#number_add_' + get_num).before(number_item);
+        number_item_num++;
+    }
 </script>
