@@ -147,6 +147,13 @@ class Questionnaire_model extends CI_Model
                 if ($temp_data['type'] == 'radiobox') {
                     $temp_data['items'] = $this->input_data['radiobox_value_'.$num];
                 }
+                if ($temp_data['type'] == 'number') {
+                    $temp_data['items'] = array(
+                        $this->input_data['number_title_'.$num],
+                        $this->input_data['number_value_'.$num],
+                    );
+                }
+
                 $t_array[] = $temp_data;
             }
         }
@@ -182,6 +189,13 @@ class Questionnaire_model extends CI_Model
                     if ($temp_data['type'] == 'radiobox') {
                         $temp_data['items'] = $this->input_data['radiobox_value_'.$num];
                     }
+                    if ($temp_data['type'] == 'number') {
+                        $temp_data['items'] = array(
+                            $this->input_data['number_title_'.$num],
+                            $this->input_data['number_value_'.$num],
+                        );
+                    }
+
                     $t_array[] = $temp_data;
                 }
             }
