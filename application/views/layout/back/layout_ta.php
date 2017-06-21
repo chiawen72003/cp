@@ -15,6 +15,10 @@
 <script src="<?php echo $base;?>public/js/back/jquery.colorbox.js"></script>
 <script src="<?php echo $base;?>public/js/back/ckeditor/ckeditor.js"></script>
 
+    <!-- questionnaireList -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="<?php echo $base;?>public/css/back/questionnaire.css?v=0.31">
+    <!-- questionnaireList end -->
 
 <script language="javascript">
 function add_Questions(){
@@ -36,6 +40,7 @@ $(function(){
     	<li><a href="<?php echo site_url('recordlist/'); ?>" title="操作紀錄列表"><img src="<?php echo base_url('public/images/back/icon_add.png');?>" />操作紀錄列表</a></li>
     	<li><a href="<?php echo site_url('scorelist/'); ?>" title="評分列表"><img src="<?php echo base_url('public/images/back/icon_add.png');?>" />評分列表</a></li>
     	<li><a href="<?php echo site_url('achievementlist/'); ?>" title="成績列表"><img src="<?php echo base_url('public/images/back/icon_add.png');?>" />成績列表</a></li>
+		<li><a href="<?php echo site_url('questionnaire/'); ?>" title="問卷列表"><img src="<?php echo base_url('public/images/back/icon_add.png');?>" />問卷列表</a></li>
     	<li><a href="<?php echo site_url('memck/logout_teacher'); ?>" title="登出"><img src="<?php echo base_url('public/images/back/icon_add.png');?>" />登出</a></li>
     </ul>
 </aside>
