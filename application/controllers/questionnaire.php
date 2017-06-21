@@ -377,6 +377,8 @@ class Questionnaire extends CI_Controller
                 'user_type' => 'teacher',
                 'user_num' => $this->session->userdata("userID"),
             );
+            $t = $this -> questionnaire_model -> get_open_data($where_array);
+            $data['list_data'] = isset($t[0])?$t[0]:null;
             $data['school'] = $this -> teacherlist_model -> getSchoolData();
             $data['teacher'] = $this -> teacherlist_model -> getData($this->session->userdata("userID"));
             $data['class_data'] = $this -> classlist_model -> getListData();
