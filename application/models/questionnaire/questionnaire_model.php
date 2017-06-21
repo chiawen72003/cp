@@ -242,10 +242,13 @@ class Questionnaire_model extends CI_Model
             $tempArray['student_num'] = $this->session->userdata("userID");
             $t_array = $this->input_data;
             unset($t_array['num']);
+            unset($t_array['user_type']);
+            unset($t_array['user_num']);
             $tempArray['ans_data'] = json_encode($t_array);
             $tempArray['up_date'] = date("Y-m-d H:i", time());
             $this->db->insert('questionnaire_data', $tempArray);
             $this->db->insert_id();
+            die();
         }
     }
 
