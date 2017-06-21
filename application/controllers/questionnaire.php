@@ -26,7 +26,6 @@ class Questionnaire extends CI_Controller
     public function index()
     {
         $this->load->library('pagination');
-
         $this->load->library('layout');//套用樣板為layout_main
         if ($this->session->userdata("loginType") == "teacher") {
             $this->layout->setLayout('layout/back/layout_ta');//套用樣板
@@ -34,32 +33,25 @@ class Questionnaire extends CI_Controller
         if ($this->session->userdata("loginType") == "root") {
             $this->layout->setLayout('layout/back/layout_root');//套用樣板
         }
-
         $data = array();
         $data['base'] = $this->config->item('base_url');
-
         //處理分頁
         $whereArray = array(
             'is_del' => '0',
         );
+        //教師只能看到自己的問卷
         if ($this->session->userdata("loginType") == "teacher") {
             $whereArray['user_type'] = 'teacher';
             $whereArray['user_num'] = $this->session->userdata("userID");
         }
-        if ($this->session->userdata("loginType") == "root") {
-            $whereArray['user_type'] = 'root';
-        }
-
         $orderByArray = array('num' => 'DESC');
         $offsetDsc = 0;//目前頁面數
         $limitDsc = 10;//一頁顯示幾筆資料
         $data['offsetDsc'] = '';
-
         if (is_numeric($this->input->get('per_page'))) {
             $offsetDsc = $this->input->get('per_page');
             $data['offsetDsc'] = $offsetDsc;
         }
-
         $allNum = $this->sqlfunction->get_allDataNum('questionnaire_list', $whereArray);//總資料數量
         $config['base_url'] = $data['base'] . 'index.php/questionnaire/index/?xx=';
         $config['total_rows'] = $allNum;
@@ -82,7 +74,6 @@ class Questionnaire extends CI_Controller
                 $config['last_tag_open'] = '<li>';//最後一頁連結左邊標籤。
                 $config['last_tag_close'] = '</li>';//最後一頁連結右邊標籤。 */
         $this->pagination->initialize($config);
-
         //取出所需資料
         $data['listData'] = $this->questionnaire_model->getListData($whereArray, $limitDsc, $offsetDsc, $orderByArray);
         $data['pagination'] = $this->pagination->create_links();//ci產生的分頁html code
@@ -144,10 +135,17 @@ class Questionnaire extends CI_Controller
             if ($this->session->userdata("loginType") == "root") {
                 $this->layout->setLayout('layout/back/layout_root');//套用樣板
             }
-
+            $t_array = array(
+                'num' => $getID
+            );
+            //教師只能看到自己的問卷
+            if ($this->session->userdata("loginType") == "teacher") {
+                $t_array['user_type'] = 'teacher';
+                $t_array['user_num'] = $this->session->userdata("userID");
+            }
             $data = array();
             $data['base'] = $this->config->item('base_url');
-            $this -> questionnaire_model -> init(array('num' => $getID));
+            $this -> questionnaire_model -> init($t_array);
             $data['q_data'] = $this -> questionnaire_model -> get_data();
             $data['num'] = $getID;
             $data['offsetDsc'] = $offsetDsc;
@@ -225,12 +223,10 @@ class Questionnaire extends CI_Controller
         //處理分頁
         $whereArray = array(
         );
+        //教師只能看到自己的設定
         if ($this->session->userdata("loginType") == "teacher") {
             $whereArray['user_type'] = 'teacher';
             $whereArray['user_num'] = $this->session->userdata("userID");
-        }
-        if ($this->session->userdata("loginType") == "root") {
-            $whereArray['user_type'] = 'root';
         }
 
         $orderByArray = array('num' => 'DESC');
@@ -303,7 +299,19 @@ class Questionnaire extends CI_Controller
 
             $this->layout->view('questionnaire/open/add_page_root', $data);
         }
+        if($this->session->userdata("loginType") == "teacher")
+        {
+            $whereArray = array(
+                'user_type' => 'teacher',
+                'user_num' => $this->session->userdata("userID"),
+            );
+            $data['school'] = $this -> teacherlist_model -> getSchoolData();
+            $data['teacher'] = $this -> teacherlist_model -> getData($this->session->userdata("userID"));
+            $data['class_data'] = $this -> classlist_model -> getListData();
+            $data['q_data'] = $this -> questionnaire_model -> getListData($whereArray);
 
+            $this->layout->view('questionnaire/open/add_page_teacher', $data);
+        }
 
 
     }
@@ -361,6 +369,20 @@ class Questionnaire extends CI_Controller
             $data['q_data'] = $this -> questionnaire_model -> getListData();
 
             $this->layout->view('questionnaire/open/edit_page_root', $data);
+        }
+
+        if($this->session->userdata("loginType") == "teacher")
+        {
+            $whereArray = array(
+                'user_type' => 'teacher',
+                'user_num' => $this->session->userdata("userID"),
+            );
+            $data['school'] = $this -> teacherlist_model -> getSchoolData();
+            $data['teacher'] = $this -> teacherlist_model -> getData($this->session->userdata("userID"));
+            $data['class_data'] = $this -> classlist_model -> getListData();
+            $data['q_data'] = $this -> questionnaire_model -> getListData($whereArray);
+
+            $this->layout->view('questionnaire/open/edit_page_teacher', $data);
         }
     }
 
