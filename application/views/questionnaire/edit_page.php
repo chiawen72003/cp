@@ -25,12 +25,13 @@
                                 <i class="material-icons">filter_9_plus</i>
                             </a>
                         </li>
-                        -->
                         <li>
                             <a data-add-title="新增區塊" onclick="add_block()">
                                 <i class="material-icons">view_stream</i>
                             </a>
                         </li>
+                                                -->
+
                     </ul>
                 </div>
                 <?php
