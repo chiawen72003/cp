@@ -197,7 +197,7 @@ class Questionnaire extends CI_Controller
     public function insert_data()
     {
         $data = $this->input->post();
-        $this -> questionnaire_model ->init(array($data));
+        $this -> questionnaire_model ->init($data);
         $this -> questionnaire_model ->insert_questionnaire_data();
 
         redirect('/questionnaire/do_page?num='.$data['num']);
