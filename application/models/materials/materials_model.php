@@ -105,7 +105,9 @@ class Materials_model extends CI_Model
             foreach ($query as $row) {
                 $t['title_dsc'] = $row->title_dsc;
                 $t['contents_dsc'] = $row->contents_dsc;
-                $t['item_data'] = $row->item_data;
+                $t['can_up_file'] = $row->can_up_file;
+                $t['can_write'] = $row->can_write;
+                $t['file_data'] = json_decode($row->file_data, true);
             }
 
         }
