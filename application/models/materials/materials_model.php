@@ -189,33 +189,38 @@ class Materials_model extends CI_Model
 
             $tempArray['title_dsc'] = $this->input_data['title_dsc'];
             $tempArray['contents_dsc'] = $this->input_data['contents_dsc'];
+            $tempArray['can_up_file'] =  isset($this -> input_data['can_up_file'])?'1':'0';
+            $tempArray['can_write'] =  isset($this -> input_data['can_write'])?'1':'0';
             $tempArray['up_date'] = date("Y-m-d H:i", time());
-            //整理試卷教材物件，插入資料表
-            $t_array = array();
-            $item_area_num = $this->input_data['item_area_num'];
-            if (is_array($item_area_num)) {
-                foreach ($item_area_num as $key => $num) {
-                    $temp_data = array();
-                    $temp_data['title'] = $this->input_data['item_title'][$key];
-                    $temp_data['type'] = $this->input_data['item_type'][$key];
-                    $temp_data['items'] = array();
-                    if ($temp_data['type'] == 'checkbox') {
-                        $temp_data['items'] = $this->input_data['checkbox_value_'.$num];
-                    }
-                    if ($temp_data['type'] == 'radiobox') {
-                        $temp_data['items'] = $this->input_data['radiobox_value_'.$num];
-                    }
-                    if ($temp_data['type'] == 'number') {
-                        $temp_data['items'] = array(
-                            $this->input_data['number_title_'.$num],
-                            $this->input_data['number_value_'.$num],
-                        );
-                    }
-
-                    $t_array[] = $temp_data;
+            //設定附件的路徑
+            $upFload = date("Ymd", time());
+            $upFileFload = "./upFILE/materials/".$upFload;
+            $upFile = $upFileFload."/";
+            if (!is_dir($upFileFload)) {      //檢察upload資料夾是否存在
+                if (!mkdir($upFile)) { //不存在的話就創建upload資料夾
+                    //die ("上傳目錄不存在，並且創建失敗");
                 }
             }
-            $tempArray['item_data'] = json_encode($t_array);
+            $config['upload_path'] = $upFileFload;//以根目錄為起點的位置
+            $config['allowed_types'] = '*';
+            //$config['max_size']	= '100';
+            //$config['max_width']  = '1024';
+            //$config['max_height']  = '768';
+            $config['encrypt_name'] = true;//隨機取名字
+            $this->load->library('upload', $config);
+            // die(var_dump($this->upload->do_upload('up_img') ));
+            if (!$this->upload->do_upload('up_file')) {
+                // $error = array('error' => $this->upload->display_errors());
+            } else {
+                $file_data = array();
+                $getDataArray = $this->upload->data();//取得資訊
+                $t  = array(
+                    'file_path' => $upFload.'/'.$getDataArray['file_name'],
+                    'file_name' => $getDataArray['orig_name'],
+                );
+                $file_data[] = $t;
+                $tempArray['file_data'] = json_encode($file_data);
+            }
             $this->db->where('num', $this->input_data['num']);
             //教師只能更新自己的資料
             if ($this->session->userdata("loginType") == "teacher") {
