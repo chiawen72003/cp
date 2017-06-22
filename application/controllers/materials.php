@@ -11,6 +11,7 @@ class Materials extends CI_Controller
         $this->load->helper(array('url', 'form'));
         $this->load->model('materials/materials_model');
         $this->load->model('teacherlist/teacherlist_model');
+        $this->load->model('student/student_model');
         $this->load->model('classlist/classlist_model');
         $this->load->model('publicfunction/sqlfunction', 'sqlfunction');
         if ($this->session->userdata("loginType") == "root" || $this->session->userdata("loginType") == "teacher") {
@@ -239,7 +240,7 @@ class Materials extends CI_Controller
             $data['offsetDsc'] = $offsetDsc;
         }
 
-        $allNum = $this->sqlfunction->get_allDataNum('materials_class_list', $whereArray);//總資料數量
+        $allNum = $this->sqlfunction->get_allDataNum('materials_student_list', $whereArray);//總資料數量
         $config['base_url'] = $data['base'] . 'index.php/materials/openList/?xx=';
         $config['total_rows'] = $allNum;
         $config['per_page'] = $limitDsc;
@@ -287,27 +288,17 @@ class Materials extends CI_Controller
 
         $data = array();
         $data['base'] = $this->config->item('base_url');
-        $data['school'] = null;
+        $data['student'] = null;
         $data['class'] = null;
-        $data['teacher'] = null;
-        if($this->session->userdata("loginType") == "root")
-        {
-            $data['school'] = $this -> teacherlist_model -> getSchoolData();
-            $data['teacher'] = $this -> teacherlist_model -> getListData(array('is_del' => 0));
-            $data['class_data'] = $this -> classlist_model -> getListData();
-            $data['q_data'] = $this -> materials_model -> getListData();
-
-            $this->layout->view('materials/open/add_page_root', $data);
-        }
         if($this->session->userdata("loginType") == "teacher")
         {
             $whereArray = array(
                 'user_type' => 'teacher',
                 'user_num' => $this->session->userdata("userID"),
             );
-            $data['school'] = $this -> teacherlist_model -> getSchoolData();
-            $data['teacher'] = $this -> teacherlist_model -> getData($this->session->userdata("userID"));
-            $data['class_data'] = $this -> classlist_model -> getListData();
+            $this -> student_model ->init(array('num' => $this->session->userdata("userID")));
+            $data['student'] = $this -> student_model -> get_all_by_teacher();
+            $data['class_data'] = $this -> classlist_model -> getListData($whereArray);
             $data['q_data'] = $this -> materials_model -> getListData($whereArray);
 
             $this->layout->view('materials/open/add_page_teacher', $data);
