@@ -51,7 +51,7 @@
             var newOptionOBj =  $.extend(true,{}, option_obj);
             newOptionOBj.dataType = 'm6_goNextModel';//動作類型
             newOptionOBj.dataType_Dsc = '進入下一個模組';//動作類型敘述
-            newOptionOBj.dataFunction = 'record_M3GoNextModel';//動作內容敘述
+            newOptionOBj.dataFunction = 'record_M6GoNextModel';//動作內容敘述
             newOptionOBj.dataFunction_ObjID = '';//動作內容敘述
             newOptionOBj.dataFunction_Value = '';//動作內容敘述
             option_record.push(newOptionOBj);
@@ -59,4 +59,21 @@
         }
     }
 
+    function web_m6_goNextModel(){
+        if( getWebValue['user_type'] == '<?php echo ($model_data['userType'] == 'A')?'B':'A'; ?>'){
+            m6_next_model_<?php echo ($model_data['userType'] == 'A')?'b':'a'; ?> = true;
+        }
+        if(m6_next_model_a && m6_next_model_b){
+            //紀錄動作
+            var newOptionOBj =  $.extend(true,{}, option_obj);
+            newOptionOBj.dataType = 'm6_goNextModel';//動作類型
+            newOptionOBj.dataType_Dsc = '進入下一個模組';//動作類型敘述
+            newOptionOBj.dataFunction = 'record_M6GoNextModel';//動作內容敘述
+            newOptionOBj.dataFunction_ObjID = '';//動作內容敘述
+            newOptionOBj.dataFunction_Value = '';//動作內容敘述
+            option_record.push(newOptionOBj);
+            //紀錄動作 end
+            get_NextModel();
+        }
+    }
 </script>
