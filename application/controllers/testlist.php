@@ -135,8 +135,14 @@ class Testlist extends CI_Controller
                                 curl_close($ch);
                             }
                             $data['model_data']['modelData_6']['page_model'] = $page;
-                            $data['model_data']['switchModelData'][] = $this->load->view('modelpg/model6/index', $data,
-                                true);
+                            if ($data['model_data']['userType'] == 'A') {
+                                $data['model_data']['switchModelData'][] = $this->load->view('modelpg/model6/index_a', $data,
+                                    true);
+                            }
+                            if ($data['model_data']['userType'] == 'B') {
+                                $data['model_data']['switchModelData'][] = $this->load->view('modelpg/model6/index_b', $data,
+                                    true);
+                            }
                         }
                     }
                     $this->layout->view('testlist/testpg', $data);
