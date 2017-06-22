@@ -50,13 +50,13 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <p>可上傳檔案：<input type="checkbox" class="put_1" name="can_up_file" id="can_up_file"></p>
+                                    <p>可上傳檔案：<input type="checkbox" class="put_1" name="can_up_file" id="can_up_file" value="1"></p>
                                     </p>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <p>可填寫內容：<input type="checkbox" class="put_1" name="can_write" id="can_write"></p>
+                                    <p>可填寫內容：<input type="checkbox" class="put_1" name="can_write" id="can_write" value="1"></p>
                                 </td>
                             </tr>
                             <tr>
