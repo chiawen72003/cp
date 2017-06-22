@@ -39,7 +39,7 @@ class Materials extends CI_Controller
         $whereArray = array(
             'is_del' => '0',
         );
-        //教師只能看到自己的問卷
+        //教師只能看到自己的試卷教材
         if ($this->session->userdata("loginType") == "teacher") {
             $whereArray['user_type'] = 'teacher';
             $whereArray['user_num'] = $this->session->userdata("userID");
@@ -82,7 +82,7 @@ class Materials extends CI_Controller
     }
 
     /**
-     * 學生實際填寫問卷
+     * 學生實際填寫試卷教材
      */
     public function do_page()
     {
@@ -99,7 +99,7 @@ class Materials extends CI_Controller
     }
 
     /**
-     * 新增問卷的編輯頁面
+     * 新增試卷教材的編輯頁面
      */
     public function add_Page()
     {
@@ -120,7 +120,7 @@ class Materials extends CI_Controller
     }
 
     /**
-     * 編輯舊問卷的編輯頁面
+     * 編輯舊試卷教材的編輯頁面
      */
     public function edit_Page()
     {
@@ -138,7 +138,7 @@ class Materials extends CI_Controller
             $t_array = array(
                 'num' => $getID
             );
-            //教師只能看到自己的問卷
+            //教師只能看到自己的試卷教材
             if ($this->session->userdata("loginType") == "teacher") {
                 $t_array['user_type'] = 'teacher';
                 $t_array['user_num'] = $this->session->userdata("userID");
@@ -154,7 +154,7 @@ class Materials extends CI_Controller
     }
 
     /**
-     * 新增問卷教材資料
+     * 新增試卷教材資料
      */
     public function add_data()
     {
@@ -167,7 +167,7 @@ class Materials extends CI_Controller
     }
 
     /**
-     * 更新問卷教材資料
+     * 更新試卷教材資料
      */
     public function update_data()
     {
@@ -180,7 +180,7 @@ class Materials extends CI_Controller
     }
 
     /**
-     * 移除一筆問卷教材資料
+     * 移除一筆試卷教材資料
      */
     public function del()
     {
@@ -192,7 +192,7 @@ class Materials extends CI_Controller
     }
 
     /**
-     * 新增 學生作答的問卷教材資料
+     * 新增 學生作答的試卷教材資料
      */
     public function insert_data()
     {
@@ -204,7 +204,7 @@ class Materials extends CI_Controller
     }
 
     /**
-     * 問卷開放時間列表
+     * 試卷教材開放時間列表
      */
     public function openList()
     {
@@ -273,7 +273,7 @@ class Materials extends CI_Controller
     }
 
     /**
-     * 問卷開放時間的新增頁面
+     * 試卷教材開放時間的新增頁面
      */
     public function addOpenPage(){
 
@@ -317,7 +317,7 @@ class Materials extends CI_Controller
     }
 
     /**
-     * 新增 問卷開放資料
+     * 新增 試卷教材開放資料
      */
     public function insertOpenData(){
 
@@ -337,7 +337,7 @@ class Materials extends CI_Controller
     }
 
     /**
-     * 問卷開放時間的編輯頁面
+     * 試卷教材開放時間的編輯頁面
      */
     public function editOpenPage(){
         $num = $this->input->get('num');
@@ -389,7 +389,7 @@ class Materials extends CI_Controller
     }
 
     /**
-     * 更新問卷教材資料
+     * 更新試卷教材資料
      */
     public function updateOpenData()
     {
@@ -402,7 +402,7 @@ class Materials extends CI_Controller
 
 
     /**
-     * 刪除一筆問卷開放的資料
+     * 刪除一筆試卷教材開放的資料
      */
     public function delOpenData(){
         $result = 'error';
