@@ -25,7 +25,7 @@ class Materials_model extends CI_Model
     }
 
     /**
-     * 取得問卷列表資料
+     * 取得試卷教材列表資料
      *
      * @param string $whereArray
      * @param string $limitDsc
@@ -65,7 +65,7 @@ class Materials_model extends CI_Model
     }
 
     /**
-     * 取得問卷num跟title組合的資料
+     * 取得試卷教材num跟title組合的資料
      *
      * @param string $whereArray
      * @param string $limitDsc
@@ -88,7 +88,7 @@ class Materials_model extends CI_Model
 
 
     /**
-     * 取得單一問卷的設定資料
+     * 取得單一試卷教材的設定資料
      */
     public function get_data()
     {
@@ -114,7 +114,7 @@ class Materials_model extends CI_Model
     }
 
     /**
-     * 新增問卷資料
+     * 新增試卷教材資料
      *
      */
     public function insertData()
@@ -122,6 +122,15 @@ class Materials_model extends CI_Model
         $tempArray = array();
         $tempArray['title_dsc'] = $this->input_data['title_dsc'];
         $tempArray['contents_dsc'] = $this->input_data['contents_dsc'];
+        if(isset($this -> input_data['can_up_file']))
+        {
+            $tempArray['can_up_file'] = $this -> input_data['can_up_file'];
+        }
+        if(isset($this -> input_data['can_write']))
+        {
+            $tempArray['can_write'] = $this -> input_data['can_write'];
+        }
+
         $tempArray['up_date'] = date("Y-m-d H:i", time());
 
         if ($this->session->userdata("loginType") == "teacher") {
@@ -132,38 +141,43 @@ class Materials_model extends CI_Model
             $tempArray['user_type'] = 'root';
         }
 
-        //整理問卷物件，插入資料表
-        $t_array = array();
-        $item_area_num = $this->input_data['item_area_num'];
-        if (is_array($item_area_num)) {
-            foreach ($item_area_num as $key => $num) {
-                $temp_data = array();
-                $temp_data['title'] = $this->input_data['item_title'][$key];
-                $temp_data['type'] = $this->input_data['item_type'][$key];
-                $temp_data['items'] = array();
-                if ($temp_data['type'] == 'checkbox') {
-                    $temp_data['items'] = $this->input_data['checkbox_value_'.$num];
-                }
-                if ($temp_data['type'] == 'radiobox') {
-                    $temp_data['items'] = $this->input_data['radiobox_value_'.$num];
-                }
-                if ($temp_data['type'] == 'number') {
-                    $temp_data['items'] = array(
-                        $this->input_data['number_title_'.$num],
-                        $this->input_data['number_value_'.$num],
-                    );
-                }
-
-                $t_array[] = $temp_data;
+        //設定附件的路徑
+        $upFload = date("Ymd", time());
+        $upFileFload = "./upFILE/materials/".$upFload;
+        $upFile = $upFileFload."/";
+        if (!is_dir($upFileFload)) {      //檢察upload資料夾是否存在
+            if (!mkdir($upFile)) { //不存在的話就創建upload資料夾
+                //die ("上傳目錄不存在，並且創建失敗");
             }
         }
-        $tempArray['item_data'] = json_encode($t_array);
+        $file_data = array();
+
+        $config['upload_path'] = $upFileFload;//以根目錄為起點的位置
+        $config['allowed_types'] = '*';
+        //$config['max_size']	= '100';
+        //$config['max_width']  = '1024';
+        //$config['max_height']  = '768';
+        $config['encrypt_name'] = true;//隨機取名字
+        $this->load->library('upload', $config);
+       // die(var_dump($this->upload->do_upload('up_img') ));
+        if (!$this->upload->do_upload('up_file')) {
+           // $error = array('error' => $this->upload->display_errors());
+        } else {
+            $getDataArray = $this->upload->data();//取得資訊
+            $t  = array(
+                'file_path' => $upFload.'/'.$getDataArray['file_name'],
+                'file_name' => $getDataArray['orig_name'],
+            );
+
+            $file_data[] = $t;
+        }
+        $tempArray['file_data'] = json_encode($file_data);
         $this->db->insert('materials_list', $tempArray);
         $this->db->insert_id();
     }
 
     /**
-     * 更新問卷資料
+     * 更新試卷教材資料
      *
      * @param $num
      */
@@ -174,7 +188,7 @@ class Materials_model extends CI_Model
             $tempArray['title_dsc'] = $this->input_data['title_dsc'];
             $tempArray['contents_dsc'] = $this->input_data['contents_dsc'];
             $tempArray['up_date'] = date("Y-m-d H:i", time());
-            //整理問卷物件，插入資料表
+            //整理試卷教材物件，插入資料表
             $t_array = array();
             $item_area_num = $this->input_data['item_area_num'];
             if (is_array($item_area_num)) {
@@ -211,7 +225,7 @@ class Materials_model extends CI_Model
     }
 
     /**
-     * 刪除問卷資料
+     * 刪除試卷教材資料
      *
      * @param $num
      */
@@ -232,7 +246,7 @@ class Materials_model extends CI_Model
     }
 
     /**
-     * 增加 學生作答的問卷資料
+     * 增加 學生作答的試卷教材資料
      */
     public function insert_materials_data()
     {
@@ -253,7 +267,7 @@ class Materials_model extends CI_Model
     }
 
     /*
-    * 取得問卷開放的資料
+    * 取得試卷教材開放的資料
     *
     * @param string $whereArray
     * @param string $limitDsc
@@ -292,7 +306,7 @@ class Materials_model extends CI_Model
     }
 
     /**
-     * 新增問卷開放設定
+     * 新增試卷教材開放設定
      */
     public function insert_open_data()
     {
@@ -320,7 +334,7 @@ class Materials_model extends CI_Model
 
 
     /**
-     * 更新問卷開放設定
+     * 更新試卷教材開放設定
      */
     public function update_open_data()
     {
@@ -347,7 +361,7 @@ class Materials_model extends CI_Model
     }
 
     /**
-     * 刪除問卷資料
+     * 刪除試卷教材資料
      *
      * @param $num
      */
