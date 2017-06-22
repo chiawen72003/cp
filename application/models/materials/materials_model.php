@@ -296,9 +296,9 @@ class Materials_model extends CI_Model
             }
         }
         if ($limitDsc > '' and $offsetDsc > '') {
-            $query = $this->db->get('materials_class_list', $limitDsc, $offsetDsc)->result();
+            $query = $this->db->get('materials_student_list', $limitDsc, $offsetDsc)->result();
         } else {
-            $query = $this->db->get('materials_class_list')->result();
+            $query = $this->db->get('materials_student_list')->result();
         }
 
         foreach ($query as $row) {
@@ -330,7 +330,7 @@ class Materials_model extends CI_Model
             $tempArray['begin_date'] = $this->input_data['begin_date'];
             $tempArray['end_date'] = $this->input_data['end_date'];
             $tempArray['up_date'] = date("Y-m-d H:i", time());
-            $this->db->insert('materials_class_list', $tempArray);
+            $this->db->insert('materials_student_list', $tempArray);
             $this->db->insert_id();
 
             return 'success';
@@ -359,7 +359,7 @@ class Materials_model extends CI_Model
                 $this->db->where('user_num', $this->session->userdata("userID"));
             }
             $this->db->where('num', $this->input_data['num']);
-            $this->db->update('materials_class_list', $tArray);
+            $this->db->update('materials_student_list', $tArray);
 
             return 'success';
         }
@@ -381,7 +381,7 @@ class Materials_model extends CI_Model
             if ($this->session->userdata("loginType") == "teacher") {
                 $data['teacher_num'] = $this->session->userdata("userID");
             }
-            $this->db->delete('materials_class_list', $data);
+            $this->db->delete('materials_student_list', $data);
 
             return 'success';
         }
