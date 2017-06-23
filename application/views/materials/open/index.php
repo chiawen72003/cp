@@ -10,7 +10,8 @@
         <tr>
             <td width="5%">編號</td>
             <td width="30%">教材標題</td>
-            <td width="20%">學生姓名</td>
+            <td width="10%">學生姓名</td>
+            <td width="10%">完成與否</td>
             <td width="10%">起始時間</td>
             <td width="10%">結束時間</td>
             <td width="25%">功能設定</td>
@@ -28,11 +29,13 @@
                 <tr>
                     <td width="5%"><?php echo $k+1;?></td>
                     <td width="30%"><?php echo isset($materials_title[$v['materials_num']])?$materials_title[$v['materials_num']]:'';?></td>
-                    <td width="20%"><?php echo isset($student_name[$v['student_num']])?$student_name[$v['student_num']]:'';?></td>
+                    <td width="10%"><?php echo isset($student_name[$v['student_num']])?$student_name[$v['student_num']]:'';?></td>
+                    <td width="10%"><?php echo ($v['is_finish'] ==1)?'是':'否';?></td>
                     <td width="10%"><?php echo $v['begin_date'];?></td>
                     <td width="10%"><?php echo $v['end_date'];?></td>
                     <td width="25%">
-                        <a class="button" title="編輯" href="<?php echo  site_url("materials/editOpenPage/");?>?pg=<?php echo $offsetDsc;?>&num=<?php echo $v['num'];?>">編輯</a>
+                        <!--<a class="button" title="編輯" href="<?php echo  site_url("materials/editOpenPage/");?>?pg=<?php echo $offsetDsc;?>&num=<?php echo $v['num'];?>">編輯</a>-->
+                        <a class="button" title="查看" href="#">查看</a>
                         <a class="button" title="刪除" onclick="del('<?php echo $v['num']; ?>')">刪除</a>
                     </td>
                 </tr>
