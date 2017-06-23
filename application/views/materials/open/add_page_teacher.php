@@ -53,8 +53,45 @@ $(function() {
     $( ".datepicker" ).datepicker({dateFormat:"yy-mm-dd",});
 });
 var dataIsSend = false;
+var student = [];
+<?php
+foreach($student as $v){
+?>
+student.push({
+    'num':'<?php echo $v['num'];?>',
+    'class_num':'<?php echo $v['class_num'];?>',
+    'student_id':'<?php echo $v['student_id'];?>',
+    'name':'<?php echo $v['c_name'];?>',
+});
+<?php
+}
+?>
+
 $( document ).ready(function() {
 });
+
+/**
+ * 重設學生資料
+ */
+function reset_student(){
+    $("#select_student option").remove();
+    $('#select_student').append(
+        '<option value="">請選擇學生</option>'
+    );
+    var sw_class = $('#select_class').val();
+    if(sw_class > '')
+    {
+        for(var x=0; x<student.length; x++)
+        {
+            if(student[x]['class_num'] == sw_class)
+            {
+                $('#select_student').append(
+                    '<option value="'+student[x]['num']+'">'+student[x]['name']+'</option>'
+                );
+            }
+        }
+    }
+}
 
 function chkValue(){
 	var isGo = true;
@@ -91,8 +128,8 @@ function chkValue(){
             url: '<?php echo  site_url('materials/insertOpenData'); ?>',
             type:"POST",
             data: {
-                questions_num:$('#select_quation').val(),
-                class_num:$('#select_class').val(),
+                materials_num:'<?php echo $materials_num;?>',
+                student_num:$('#select_student').val(),
                 begin_date:$('#begin_date').val(),
                 end_date:$('#end_date').val(),
             },
