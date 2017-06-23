@@ -44,4 +44,22 @@ class Student_model extends CI_Model
 
         return $t_array;
     }
+
+    /**
+     * 取得指定所有學生的姓名資料
+     *
+     * @return array
+     */
+    public function get_all_student_name()
+    {
+        $t_array = array();
+        $this -> db ->select('c_name,num');
+        $this->db->where('is_del', '0');
+        $query = $this->db->get('student_data')->result();
+        foreach ($query as $row) {
+            $t_array[$row -> num] = $row -> c_name;
+        }
+
+        return $t_array;
+    }
 }
