@@ -323,10 +323,8 @@ class Materials_model extends CI_Model
             $tempArray = array();
             $tempArray['user_type'] = $this->input_data['user_type'];
             $tempArray['user_num'] = $this->input_data['user_num'];
-            $tempArray['questions_num'] = $this->input_data['questions_num'];
-            $tempArray['school_num'] = $this->input_data['school_num'];
-            $tempArray['teacher_num'] = $this->input_data['teacher_num'];
-            $tempArray['class_num'] = $this->input_data['class_num'];
+            $tempArray['materials_num'] = $this->input_data['materials_num'];
+            $tempArray['student_num'] = $this->input_data['student_num'];
             $tempArray['begin_date'] = $this->input_data['begin_date'];
             $tempArray['end_date'] = $this->input_data['end_date'];
             $tempArray['up_date'] = date("Y-m-d H:i", time());
