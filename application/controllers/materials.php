@@ -220,9 +220,14 @@ class Materials extends CI_Controller
 
         $data = array();
         $data['base'] = $this->config->item('base_url');
-
+        $data['materials_num'] = '0';//試卷教材的num
+        $get_num = $this->input->get('num');
+        if(is_numeric($get_num)){
+            $data['materials_num'] = $get_num;//試卷教材的num
+        }
         //處理分頁
         $whereArray = array(
+            'materials_num' => $data['materials_num'],
         );
         //教師只能看到自己的設定
         if ($this->session->userdata("loginType") == "teacher") {
@@ -265,9 +270,8 @@ class Materials extends CI_Controller
 
         //取出所需資料
         $data['listData'] = $this->materials_model->get_open_data($whereArray, $limitDsc, $offsetDsc, $orderByArray);
-        $data['quation_title'] = $this->materials_model->getTitleData();
-        $data['school'] = $this->teacherlist_model->getSchoolData();
-        $data['class_data'] = $this -> classlist_model -> get_class_name_data();
+        $data['materials_title'] = $this->materials_model->getTitleData();
+        $data['student_name'] = $this->student_model->get_all_student_name();
         $data['pagination'] = $this->pagination->create_links();//ci產生的分頁html code
 
         $this->layout->view('materials/open/index', $data);
@@ -286,7 +290,13 @@ class Materials extends CI_Controller
             $this->layout->setLayout('layout/back/layout_root');//套用樣板
         }
 
+
         $data = array();
+        $data['materials_num'] = '0';//試卷教材的num
+        $get_num = $this->input->get('num');
+        if(is_numeric($get_num)){
+            $data['materials_num'] = $get_num;//試卷教材的num
+        }
         $data['base'] = $this->config->item('base_url');
         $data['student'] = null;
         $data['class'] = null;
