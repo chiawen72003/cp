@@ -48,6 +48,14 @@ class Testlist extends CI_Controller
                 'name' => '操作紀錄列表',
                 'urlDsc' => 'testlist/recordlist/',
             ),
+            array(
+                'name' => '問卷列表',
+                'urlDsc' => 'testlist/recordlist/',
+            ),
+            array(
+                'name' => '試卷教材列表',
+                'urlDsc' => 'materials/listPage/',
+            ),
         );
 
         $this->layout->view('testlist/index', $data);
