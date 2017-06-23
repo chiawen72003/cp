@@ -377,11 +377,12 @@ class Materials_model extends CI_Model
                 'num' => $this->input_data['num'],
             );
             if ($this->session->userdata("loginType") == "teacher") {
-                $data['teacher_num'] = $this->session->userdata("userID");
-            }
-            $this->db->delete('materials_student_list', $data);
+                $data['user_type'] = 'teacher';
+                $data['user_num'] = $this->session->userdata("userID");
+                $this->db->delete('materials_student_list', $data);
 
-            return 'success';
+                return 'success';
+            }
         }
 
         return 'error';
