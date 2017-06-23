@@ -3,7 +3,7 @@
         <!--模組名稱搜尋：<input type="text" name="s_word" id="s_word" value="" ><a class="button" title="模組名稱搜尋：" onclick="search_word()">搜尋</a><a href="index.php" class="button" title="清除搜尋" >清除搜尋</a>-->
     </div>
     <ul>
-        <li><a class="button" title="新增模組" href="<?php echo  site_url('materials/addOpenPage'); ?>">新增開放問卷</a></li>
+        <li><a class="button" title="新增模組" href="<?php echo  site_url('materials/addOpenPage').'?num='.$materials_num; ?>">新增開放問卷</a></li>
     </ul>
     <table class="title">
         <tbody>
@@ -27,9 +27,8 @@
             ?>
                 <tr>
                     <td width="5%"><?php echo $k+1;?></td>
-                    <td width="30%"><?php echo isset($quation_title[$v['questions_num']])?$quation_title[$v['questions_num']]:'';?></td>
-                    <td width="10%"><?php echo isset($school[$v['school_num']])?$school[$v['school_num']]:'';?></td>
-                    <td width="10%"><?php echo isset($class_data[$v['class_num']])?$class_data[$v['class_num']]:'';?></td>
+                    <td width="30%"><?php echo isset($materials_title[$v['materials_num']])?$materials_title[$v['materials_num']]:'';?></td>
+                    <td width="20%"><?php echo isset($student_name[$v['student_num']])?$student_name[$v['student_num']]:'';?></td>
                     <td width="10%"><?php echo $v['begin_date'];?></td>
                     <td width="10%"><?php echo $v['end_date'];?></td>
                     <td width="25%">
