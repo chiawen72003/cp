@@ -238,7 +238,7 @@ class Questionnaire_model extends CI_Model
     {
         if ($this->input_data['num']) {
             $tempArray = array();
-            $tempArray['questionnaire_list_num'] = $this->input_data['num'];
+            $tempArray['questionnaire_class_num'] = $this->input_data['num'];
             $tempArray['student_num'] = $this->session->userdata("userID");
             $t_array = $this->input_data;
             unset($t_array['num']);
@@ -391,11 +391,11 @@ class Questionnaire_model extends CI_Model
 
                 //取出已經做過得問卷資料
                 $has_data = array();
-                $this -> db -> select('questionnaire_list_num');
+                $this -> db -> select('questionnaire_class_num');
                 $this -> db -> where('student_num', $this->input_data['user_num']);
                 $query = $this->db->get('questionnaire_record')->result();
                 foreach ($query as $v){
-                    $has_data[] = $v->questionnaire_list_num;
+                    $has_data[] = $v->questionnaire_class_num;
                 }
 
                 //取出可以填寫的問卷資料
@@ -426,4 +426,29 @@ class Questionnaire_model extends CI_Model
 
         return $return_data;
     }
+
+    /**
+     * 學生端 單一問卷的設定資料
+     */
+    public function get_data_student()
+    {
+        $t = array();
+        if ($this->input_data['num']) {
+            $this->db->select('questionnaire_list.title_dsc');
+            $this->db->select('questionnaire_list.contents_dsc');
+            $this->db->select('questionnaire_list.item_data');
+            $this->db->where('questionnaire_class_list.num', $this->input_data['num']);
+            $this->db->join('questionnaire_list', 'questionnaire_list.num = questionnaire_class_list.questions_num', 'left');
+            $query = $this->db->get('questionnaire_class_list')->result();
+            foreach ($query as $row) {
+                $t['title_dsc'] = $row->title_dsc;
+                $t['contents_dsc'] = $row->contents_dsc;
+                $t['item_data'] = $row->item_data;
+            }
+
+        }
+
+        return $t;
+    }
+
 }
