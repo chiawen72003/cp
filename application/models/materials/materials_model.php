@@ -416,7 +416,7 @@ class Materials_model extends CI_Model
         if ($this->input_data['num'])
         {
             $tempArray = array();
-            $tempArray['materials_list_num'] = $this->input_data['num'];
+            $tempArray['materials_student_list_num'] = $this->input_data['num'];
             $tempArray['student_num'] =  $this->input_data['user_num'];
             $tempArray['ans_data'] = $this->input_data['ans_data'];
             $tempArray['up_date'] = date("Y-m-d H:i", time());
