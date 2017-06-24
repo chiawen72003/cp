@@ -195,10 +195,16 @@ class Questionnaire extends CI_Controller
 
         $data = array();
         $data['base'] = $this->config->item('base_url');
-
+        $data['num'] = 0;
         //處理分頁
         $whereArray = array(
         );
+        if (is_numeric($this->input->get('num'))) {
+            $data['num'] = $this->input->get('num');
+            $whereArray['questions_num'] = $this->input->get('num');
+
+        }
+
         //教師只能看到自己的設定
         if ($this->session->userdata("loginType") == "teacher") {
             $whereArray['user_type'] = 'teacher';
@@ -438,7 +444,7 @@ class Questionnaire extends CI_Controller
         $num = $this->input->get('num');
         $data['num'] = $num;
         $this -> questionnaire_model -> init(array('num'=>$num));
-        $data['q_data'] = $this->questionnaire_model-> get_data();
+        $data['q_data'] = $this->questionnaire_model-> get_data_student();
         $this->layout->setLayout('layout/front/questionnaire_layout');//套用樣板
 
         $this->layout->view('questionnaire/student/do_page', $data);
