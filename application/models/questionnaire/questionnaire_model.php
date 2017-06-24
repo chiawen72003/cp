@@ -400,7 +400,7 @@ class Questionnaire_model extends CI_Model
 
                 //取出可以填寫的問卷資料
                 $this -> db -> select('questionnaire_list.title_dsc');
-                $this -> db -> select('questionnaire_list.num');
+                $this -> db -> select('questionnaire_class_list.num');
                 $this -> db -> select('questionnaire_class_list.end_date');
                 $this -> db -> where("questionnaire_class_list.begin_date <='".date("Y-m-d")."'"  );
                 $this -> db -> where("questionnaire_class_list.end_date >='".date("Y-m-d")."'"  );
