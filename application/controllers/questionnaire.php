@@ -12,6 +12,7 @@ class Questionnaire extends CI_Controller
         $this->load->model('questionnaire/questionnaire_model');
         $this->load->model('teacherlist/teacherlist_model');
         $this->load->model('classlist/classlist_model');
+        $this->load->model('student/student_model');
         $this->load->model('publicfunction/sqlfunction', 'sqlfunction');
         if ($this->session->userdata("loginType") == "root"
             || $this->session->userdata("loginType") == "teacher"
@@ -461,5 +462,39 @@ class Questionnaire extends CI_Controller
         $this -> questionnaire_model ->insert_questionnaire_data();
 
         redirect('/questionnaire/listPage');
+    }
+
+    /**
+     * 輸出操作紀錄成excel
+     */
+    public function getExcel()
+    {
+        $num = $this->input->get('num');
+        if(is_numeric($num)){
+            $this -> questionnaire_model ->init(array('num' => $num));
+            $record_data = $this -> questionnaire_model ->get_excel_data();
+            $student = $this -> student_model ->get_all_student_name();
+
+            // Starting the PHPExcel library
+            $this->load->library('PHPExcel');
+            $this->load->library('PHPExcel/IOFactory');
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle("export")->setDescription("none");
+            $objPHPExcel->setActiveSheetIndex(0);
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', '學生姓名');
+            $objPHPExcel->getActiveSheet()->setCellValue('B1', '填寫日期');
+            $objPHPExcel->getActiveSheet()->setCellValue('C1', '填寫內容');
+            $objPHPExcel->getActiveSheet()->fromArray($record_data, null, 'A2');//將資料以陣列方式填入excel
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            $objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
+            date_default_timezone_set('Asia/Taipei');
+            // Sending headers to force the user to download the file
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="問卷填寫資料.xls"');
+            header('Cache-Control: max-age=0');
+            $objWriter->save('php://output');
+        }
     }
 }
