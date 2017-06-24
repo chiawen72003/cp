@@ -9,12 +9,13 @@
         <tbody>
         <tr>
             <td width="5%">編號</td>
-            <td width="30%">問卷標題</td>
+            <td width="15%">問卷標題</td>
             <td width="10%">學校名稱</td>
             <td width="10%">班級名稱</td>
+            <td width="10%">已填數量</td>
             <td width="10%">起始時間</td>
             <td width="10%">結束時間</td>
-            <td width="25%">功能設定</td>
+            <td width="30%">功能設定</td>
         </tr>
         </tbody>
     </table>
@@ -28,12 +29,20 @@
             ?>
                 <tr>
                     <td width="5%"><?php echo $k+1;?></td>
-                    <td width="30%"><?php echo isset($quation_title[$v['questions_num']])?$quation_title[$v['questions_num']]:'';?></td>
+                    <td width="15%"><?php echo isset($quation_title[$v['questions_num']])?$quation_title[$v['questions_num']]:'';?></td>
                     <td width="10%"><?php echo isset($school[$v['school_num']])?$school[$v['school_num']]:'';?></td>
                     <td width="10%"><?php echo isset($class_data[$v['class_num']])?$class_data[$v['class_num']]:'';?></td>
+                    <td width="10%"><?php echo isset($do_quation_num[$v['num']])?$do_quation_num[$v['num']]:'0';?></td>
                     <td width="10%"><?php echo $v['begin_date'];?></td>
                     <td width="10%"><?php echo $v['end_date'];?></td>
-                    <td width="25%">
+                    <td width="30%">
+                        <?php
+                        if( isset($do_quation_num[$v['num']])){
+                         ?>
+                            <a class="button" title="匯出Excel" href="<?php echo  site_url("questionnaire/getExcel/");?>?num=<?php echo $v['num'];?>" target="_blank">匯出Excel</a>
+                        <?php
+                        }
+                        ?>
                         <a class="button" title="編輯" href="<?php echo  site_url("questionnaire/editOpenPage/");?>?pg=<?php echo $offsetDsc;?>&num=<?php echo $v['num'];?>">編輯</a>
                         <a class="button" title="刪除" onclick="del('<?php echo $v['num']; ?>')">刪除</a>
                     </td>
