@@ -24,7 +24,7 @@
         <tr id="tr_title" >
             <td >
                 教師名稱：
-                <select id="select_teacher"  onchange="reset_class()()">
+                <select id="select_teacher"  onchange="reset_class()">
                     <option value="">請選擇教師</option>
                 </select>
             </td>
@@ -38,9 +38,7 @@
         </tr>
         <tr id="tr_title" >
             <td >
-                問卷名稱： <select id="select_quation" >
-                    <option value="">請選擇問卷</option>
-                </select>
+                問卷名稱：<?php echo $q_data[$num];?>
             </td>
         </tr>
         <tr>
@@ -109,23 +107,8 @@ class_obj.push(
 <?php
 }
 ?>
-<?php
-foreach($q_data as $v)
-{
-?>
-quation_obj.push(
-    {
-        'num':'<?php echo $v['num']; ?>',
-        'name':'<?php echo $v['title_dsc']; ?>',
-    }
-);
-<?php
-}
-?>
-
 $( document ).ready(function() {
     set_school();
-    set_quation();
 });
 
 function set_school() {
@@ -136,14 +119,7 @@ function set_school() {
         );
     }
 }
-function set_quation() {
-    for(var x=0; x<quation_obj.length; x++)
-    {
-        $('#select_quation').append(
-            '<option value="'+quation_obj[x]['num']+'">'+quation_obj[x]['name']+'</option>'
-        );
-    }
-}
+
 /**
  *
  */
@@ -195,9 +171,9 @@ function reset_class() {
 function chkValue(){
 	var isGo = true;
 	var err_dsc = '';
-	var ck_array =  ["select_school","select_quation","begin_date"];
-	var err_array =  ["請選擇學校!!","請選擇問卷!!","請輸入開放日期!!"];
-	var type_array =  ["text","text","text"];
+	var ck_array =  ["select_school","begin_date"];
+	var err_array =  ["請選擇學校!!","請輸入開放日期!!"];
+	var type_array =  ["text","text"];
 
 	for(var x=0;x< ck_array.length;x++){
 		switch(type_array[x]){
@@ -227,7 +203,7 @@ function chkValue(){
             url: '<?php echo  site_url('questionnaire/insertOpenData'); ?>',
             type:"POST",
             data: {
-                questions_num:$('#select_quation').val(),
+                questions_num:'<?php echo $num;?>',
                 school_num:$('#select_school').val(),
                 teacher_num:$('#select_teacher').val(),
                 class_num:$('#select_class').val(),
