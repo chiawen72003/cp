@@ -42,6 +42,16 @@
 
     <div class="content-btn">
         <a onclick="history.back()" class="button button-primary">回上一頁</a>
-        <a href="send()" class="button button-primary">上傳作業</a>
+        <a onclick="send()" class="button button-primary">上傳作業</a>
     </div>
 </div>
+<script>
+    var is_send = false;
+    function send() {
+        if(!is_send){
+            alert('作業送出!!');
+            is_send = true;
+            $('#Form1').submit()
+        }
+    }
+</script>
