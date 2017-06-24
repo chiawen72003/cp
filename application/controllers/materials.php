@@ -14,7 +14,7 @@ class Materials extends CI_Controller
         $this->load->model('student/student_model');
         $this->load->model('classlist/classlist_model');
         $this->load->model('publicfunction/sqlfunction', 'sqlfunction');
-        if ($this->session->userdata("loginType") == "root" || $this->session->userdata("loginType") == "teacher") {
+        if ($this->session->userdata("loginType") == "root" || $this->session->userdata("loginType") == "teacher" || $this->session->userdata("loginType") == "student") {
 
         } else {
             redirect('/memck/logout', 'refresh');
@@ -415,5 +415,105 @@ class Materials extends CI_Controller
         }
 
         return  $result;
+    }
+
+    /**
+     * 學生端 試卷教材列表
+     */
+    public function listPage(){
+        $this->load->library('layout');//套用樣板為layout_main
+        $this->layout->setLayout('layout/front/layout');//套用樣板
+
+        $data = array();
+        $data['base'] = $this->config->item('base_url');
+        $data['myName'] = $this->session->userdata("userName");
+        $data['menuList'] = array(
+            array(
+                'name' => '試題列表',
+                'urlDsc' => 'testlist/',
+            ),
+            array(
+                'name' => '問卷列表',
+                'urlDsc' => 'testlist/recordlist/',
+            ),
+            array(
+                'name' => '試卷教材列表',
+                'urlDsc' => 'materials/listPage/',
+            ),
+        );
+        $t = array(
+            'user_type' => 'student',
+            'user_num' => $this->session->userdata("userID"),
+        );
+        $this -> materials_model -> init($t);
+        $data['list'] = $this -> materials_model -> get_not_finish();
+
+        $this->layout->view('materials/student/index', $data);
+    }
+
+    /**
+     * 學生端 實做試卷教材的頁面
+     */
+    public function doPage(){
+        $this->load->library('layout');//套用樣板為layout_main
+        $this->layout->setLayout('layout/front/layout');//套用樣板
+
+        $data = array();
+        $data['base'] = $this->config->item('base_url');
+        $data['myName'] = $this->session->userdata("userName");
+        $data['menuList'] = array(
+            array(
+                'name' => '試題列表',
+                'urlDsc' => 'testlist/',
+            ),
+            array(
+                'name' => '問卷列表',
+                'urlDsc' => 'testlist/recordlist/',
+            ),
+            array(
+                'name' => '試卷教材列表',
+                'urlDsc' => 'materials/listPage/',
+            ),
+        );
+        $get_num = $this->input->get('num');
+        $t = array(
+            'user_type' => 'student',
+            'user_num' => $this->session->userdata("userID"),
+            'num' => $get_num,
+        );
+        $this -> materials_model -> init($t);
+        $t = $this -> materials_model -> get_not_finish();
+        $data['list'] = $t[0];
+        $data['num'] = $get_num;
+
+        $this->layout->view('materials/student/do_page', $data);
+    }
+
+
+    /**
+     * 學生端 儲存試卷教材的資料
+     */
+    public function setDo(){
+        $data = $this->input->post();
+        if ($this->session->userdata("loginType") == "student"
+            and isset($data['num'])
+            and is_numeric($data['num'])
+        ) {
+            //先確認有操作權限且尚未完成操作
+            $t = array(
+                'user_type' => 'student',
+                'user_num' => $this->session->userdata("userID"),
+                'num' => $data['num'],
+            );
+            $this->materials_model->init($t);
+            $t_data = $this->materials_model->get_not_finish();
+            if(count($t_data) == 1){
+                $this->materials_model->init($data);
+
+                $t_data = $this->materials_model->insert_materials_data();
+            }
+        }
+
+        redirect('/materials/listPage');
     }
 }
