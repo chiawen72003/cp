@@ -43,16 +43,7 @@
         </tr>
         <tr id="tr_title" >
             <td >
-                問卷名稱： <select id="select_quation" >
-                    <option value="">請選擇問卷</option>
-                    <?php
-                    foreach($q_data as $v) {
-                    ?>
-                        <option value="<?php echo $v['num'];?>"><?php echo $v['title_dsc'];?></option>
-                    <?php
-                    }
-                    ?>
-                </select>
+                問卷名稱：<?php echo $q_data[$num];?>
             </td>
         </tr>
         <tr>
@@ -79,9 +70,9 @@ $( document ).ready(function() {
 function chkValue(){
 	var isGo = true;
 	var err_dsc = '';
-	var ck_array =  ["select_quation","begin_date"];
-	var err_array =  ["請選擇問卷!!","請輸入開放日期!!"];
-	var type_array =  ["text","text"];
+	var ck_array =  ["begin_date"];
+	var err_array =  ["請輸入開放日期!!"];
+	var type_array =  ["text"];
 
 	for(var x=0;x< ck_array.length;x++){
 		switch(type_array[x]){
@@ -111,7 +102,7 @@ function chkValue(){
             url: '<?php echo  site_url('questionnaire/insertOpenData'); ?>',
             type:"POST",
             data: {
-                questions_num:$('#select_quation').val(),
+                questions_num:'<?php echo $num;?>',
                 school_num:'<?php echo $teacher['schoolNum'];?>',
                 teacher_num:'<?php echo $teacher['num'];?>',
                 class_num:$('#select_class').val(),
