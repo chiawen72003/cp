@@ -246,9 +246,8 @@ class Questionnaire_model extends CI_Model
             unset($t_array['user_num']);
             $tempArray['ans_data'] = json_encode($t_array);
             $tempArray['up_date'] = date("Y-m-d H:i", time());
-            $this->db->insert('questionnaire_data', $tempArray);
+            $this->db->insert('questionnaire_record', $tempArray);
             $this->db->insert_id();
-            die();
         }
     }
 
@@ -366,5 +365,65 @@ class Questionnaire_model extends CI_Model
         }
 
         return 'error';
+    }
+
+    /**
+     * 學生端 取得尚未填寫的問卷資料
+     */
+    public function get_not_finish()
+    {
+        $return_data = array();
+        if(!is_null($this->input_data['user_type'])
+            and !is_null($this->input_data['user_num'])
+        )
+        {
+            if($this->input_data['user_type'] == 'student'){
+                //先取得學校的num
+                $school_num = 0;
+                $teacher_num = $this->session->userdata("teacherdataNum");
+                $class_num = $this->session->userdata("class_num");
+                $this -> db -> select('schoolNum');
+                $this -> db -> where('num', $teacher_num);
+                $query = $this->db->get('teacher_data')->result();
+                foreach ($query as $v){
+                    $school_num = $v->schoolNum;
+                }
+
+                //取出已經做過得問卷資料
+                $has_data = array();
+                $this -> db -> select('questionnaire_list_num');
+                $this -> db -> where('student_num', $this->input_data['user_num']);
+                $query = $this->db->get('questionnaire_record')->result();
+                foreach ($query as $v){
+                    $has_data[] = $v->questionnaire_list_num;
+                }
+
+                //取出可以填寫的問卷資料
+                $this -> db -> select('questionnaire_list.title_dsc');
+                $this -> db -> select('questionnaire_list.num');
+                $this -> db -> select('questionnaire_class_list.end_date');
+                $this -> db -> where("questionnaire_class_list.begin_date <='".date("Y-m-d")."'"  );
+                $this -> db -> where("questionnaire_class_list.end_date >='".date("Y-m-d")."'"  );
+                $this -> db -> where("( questionnaire_class_list.school_num='".$school_num."' AND questionnaire_class_list.class_num='0') ");
+                $this -> db -> or_where("( questionnaire_class_list.teacher_num='".$teacher_num."' AND questionnaire_class_list.class_num='".$class_num."') ");
+                if(!is_null($this->input_data['num'])){
+                    $this -> db -> where("materials_student_list.num", $this->input_data['num']);
+                }
+                $this->db->join('questionnaire_list', 'questionnaire_list.num = questionnaire_class_list.questions_num', 'left');
+                $query = $this->db->get('questionnaire_class_list')->result();
+                foreach ($query as $v){
+                    if(!in_array($v->num, $has_data)){
+                        $return_data[] = array(
+                            'num' => $v->num,
+                            'title_dsc' => $v->title_dsc,
+                            'end_date' => $v->end_date,
+                        );
+                    }
+
+                }
+            }
+        }
+
+        return $return_data;
     }
 }
