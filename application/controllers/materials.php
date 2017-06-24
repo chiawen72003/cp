@@ -516,4 +516,42 @@ class Materials extends CI_Controller
 
         redirect('/materials/listPage');
     }
+
+    /**
+     * 查看學生上傳操作試卷資料
+     */
+    public function view_data(){
+        $this->load->library('layout');//套用樣板為layout_main
+        if ($this->session->userdata("loginType") == "teacher") {
+            $this->layout->setLayout('layout/back/layout_ta');//套用樣板
+        }
+        if ($this->session->userdata("loginType") == "root") {
+            $this->layout->setLayout('layout/back/layout_root');//套用樣板
+        }
+        $data = array();
+        $get_num = $this->input->get('num');
+        $data['base'] = $this->config->item('base_url');
+        if($this->session->userdata("loginType") == "teacher")
+        {
+            $t = array(
+                'user_type' => 'teacher',
+                'user_num' => $this->session->userdata("userID"),
+                'num' => $get_num,
+            );
+            $this->materials_model->init($t);
+            $data['record'] = $this->materials_model->get_record();
+
+            $this->layout->view('materials/open/view_record', $data);
+        }
+        if($this->session->userdata("loginType") == "root")
+        {
+            $t = array(
+                'num' => $get_num,
+            );
+            $this->materials_model->init($t);
+            $data['record'] = $this->materials_model->get_record();
+
+            $this->layout->view('materials/open/view_record', $data);
+        }
+    }
 }
