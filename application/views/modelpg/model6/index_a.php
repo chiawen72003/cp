@@ -76,4 +76,11 @@
             get_NextModel();
         }
     }
+
+    /**
+     * 外部模組用來儲存操作動作的方法
+     */
+    function operating_record(getValue) {
+
+    }
 </script>
