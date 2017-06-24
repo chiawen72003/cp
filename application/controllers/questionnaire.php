@@ -246,6 +246,7 @@ class Questionnaire extends CI_Controller
 
         //取出所需資料
         $data['listData'] = $this->questionnaire_model->get_open_data($whereArray, $limitDsc, $offsetDsc, $orderByArray);
+        $data['do_quation_num'] = $this->questionnaire_model->get_do_quation_num();
         $data['quation_title'] = $this->questionnaire_model->getTitleData();
         $data['school'] = $this->teacherlist_model->getSchoolData();
         $data['class_data'] = $this -> classlist_model -> get_class_name_data();
