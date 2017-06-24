@@ -461,4 +461,52 @@ class Materials_model extends CI_Model
         }
     }
 
+    /**
+     * 回傳學生上傳的資料
+     */
+    public function get_record()
+    {
+        $return_data = array(
+            'title_dsc' => '',
+            'contents_dsc' => '',
+            'student_num' => '0',
+            'ans_data' => '',
+            'file_data' => array(),
+            'can_up_file' => 0,
+            'can_write' => 0,
+        );
+        if( !is_null($this->input_data['num']) )
+        {
+            $this -> db -> select('materials_record.ans_data');
+            $this -> db -> select('materials_record.file_data');
+            $this -> db -> select('materials_record.student_num');
+            $this -> db -> select('materials_list.title_dsc');
+            $this -> db -> select('materials_list.contents_dsc');
+            $this -> db -> select('materials_list.can_up_file');
+            $this -> db -> select('materials_list.can_write');
+            $this -> db -> where('materials_record.materials_student_list_num', $this->input_data['num']);
+            $this -> db -> where('materials_student_list.is_finish', '1');
+            if($this->input_data['user_type'] == 'teacher'){
+                $this -> db -> where('materials_list.user_type', 'teacher');
+                $this -> db -> where('materials_list.user_num', $this->input_data['user_num']);
+            }
+            $this->db->join('materials_student_list', 'materials_student_list.num = materials_record.materials_student_list_num', 'left');
+            $this->db->join('materials_list', 'materials_list.num = materials_student_list.materials_num', 'left');
+            $query = $this->db->get('materials_record')->result();
+            foreach ($query as $v){
+                $return_data = array(
+                    'title_dsc' => $v->title_dsc,
+                    'contents_dsc' => $v->contents_dsc,
+                    'student_num' => $v->student_num,
+                    'ans_data' => $v->ans_data,
+                    'file_data' => json_decode($v->file_data, true),
+                    'can_up_file' => $v->can_up_file,
+                    'can_write' => $v->can_write,
+                );
+            }
+        }
+
+        return $return_data;
+    }
+
 }
