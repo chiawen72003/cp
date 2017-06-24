@@ -38,9 +38,7 @@
         </tr>
         <tr id="tr_title" >
             <td >
-                問卷名稱： <select id="select_quation" >
-                    <option value="">請選擇問卷</option>
-                </select>
+                問卷名稱： <?php echo (isset($q_data[$list_data['questions_num']]))?:'';?>
             </td>
         </tr>
         <tr>
@@ -65,7 +63,6 @@ var dataIsSend = false;
 var school_obj = [];
 var teacher_obj = [];
 var class_obj = [];
-var quation_obj = [];
 <?php
     foreach($school as $key => $v)
     {
@@ -109,19 +106,6 @@ class_obj.push(
 <?php
 }
 ?>
-<?php
-foreach($q_data as $v)
-{
-?>
-quation_obj.push(
-    {
-        'num':'<?php echo $v['num']; ?>',
-        'name':'<?php echo $v['title_dsc']; ?>',
-    }
-);
-<?php
-}
-?>
 
 $( document ).ready(function() {
     set_school();
@@ -130,9 +114,6 @@ $( document ).ready(function() {
     $('#select_teacher').val('<?php echo $list_data['teacher_num'];?>');
     reset_class();
     $('#select_class').val('<?php echo $list_data['class_num'];?>');
-    set_quation();
-    $('#select_quation').val('<?php echo $list_data['questions_num'];?>');
-
 });
 
 function set_school() {
@@ -140,14 +121,6 @@ function set_school() {
     {
         $('#select_school').append(
             '<option value="'+school_obj[x]['num']+'">'+school_obj[x]['name']+'</option>'
-        );
-    }
-}
-function set_quation() {
-    for(var x=0; x<quation_obj.length; x++)
-    {
-        $('#select_quation').append(
-            '<option value="'+quation_obj[x]['num']+'">'+quation_obj[x]['name']+'</option>'
         );
     }
 }
@@ -202,9 +175,9 @@ function reset_class() {
 function chkValue(){
 	var isGo = true;
 	var err_dsc = '';
-	var ck_array =  ["select_school","select_quation","begin_date"];
-	var err_array =  ["請選擇學校!!","請選擇問卷!!","請輸入開放日期!!"];
-	var type_array =  ["text","text","text"];
+	var ck_array =  ["select_school","begin_date"];
+	var err_array =  ["請選擇學校!!","請輸入開放日期!!"];
+	var type_array =  ["text","text"];
 
 	for(var x=0;x< ck_array.length;x++){
 		switch(type_array[x]){
@@ -235,7 +208,7 @@ function chkValue(){
             type:"POST",
             data: {
                 num:'<?php echo $list_data['num'];?>',
-                questions_num:$('#select_quation').val(),
+                questions_num:'<?php echo $list_data['questions_num'];?>',
                 school_num:$('#select_school').val(),
                 teacher_num:$('#select_teacher').val(),
                 class_num:$('#select_class').val(),
