@@ -38,7 +38,7 @@
         </tr>
         <tr id="tr_title" >
             <td >
-                問卷名稱： <?php echo (isset($q_data[$list_data['questions_num']]))?:'';?>
+                問卷名稱： <?php echo (isset($q_data[$list_data['questions_num']]))?$q_data[$list_data['questions_num']]:'';?>
             </td>
         </tr>
         <tr>
