@@ -52,11 +52,14 @@ echo form_open_multipart('modellist/setModelData', $attributes,$hidden);
 						<tr>
 							<td>
                                 <p>請選擇單元：<select name="unit" id="unit" >
-                                    <option value="1">閱讀出題模組</option>
-                                    <option value="2" <?php echo (isset($modelsData['unit']) and $modelsData['unit'] == '2')?'selected':'';?>>搶25遊戲模組</option>
-                                    <option value="3" <?php echo (isset($modelsData['unit']) and $modelsData['unit'] == '3')?'selected':'';?>>思樂冰製作遊戲模組</option>
-                                    <option value="4" <?php echo (isset($modelsData['unit']) and $modelsData['unit'] == '4')?'selected':'';?>>最佳銷售組合遊戲模組</option>
-                                    <option value="5" <?php echo (isset($modelsData['unit']) and $modelsData['unit'] == '5')?'selected':'';?>>數學渡河邏輯遊戲模組</option>
+                                    <option value="1">單元01</option>
+                                    <?php
+                                    for($x=2;$x<30;$x++){
+                                    ?>
+                                        <option value="<?php echo $x;?>" <?php echo (isset($modelsData['unit']) and $modelsData['unit'] == $x)?'selected':'';?>>單元<?php echo str_pad($x,2,'0',STR_PAD_LEFT);?></option>
+                                    <?php
+                                    }
+                                    ?>
                                     </select>
                                 </p>
                             </td>
@@ -64,11 +67,14 @@ echo form_open_multipart('modellist/setModelData', $attributes,$hidden);
                         <tr>
                             <td>
                                 <p>請選擇試卷：<select name="paper" id="paper" >
-                                        <option value="1">閱讀出題模組</option>
-                                        <option value="2" <?php echo (isset($modelsData['paper']) and $modelsData['paper'] == '2')?'selected':'';?>>搶25遊戲模組</option>
-                                        <option value="3" <?php echo (isset($modelsData['paper']) and $modelsData['paper'] == '3')?'selected':'';?>>思樂冰製作遊戲模組</option>
-                                        <option value="4" <?php echo (isset($modelsData['paper']) and $modelsData['paper'] == '4')?'selected':'';?>>最佳銷售組合遊戲模組</option>
-                                        <option value="5" <?php echo (isset($modelsData['paper']) and $modelsData['paper'] == '5')?'selected':'';?>>數學渡河邏輯遊戲模組</option>
+                                        <option value="1">試卷01</option>
+                                        <?php
+                                        for($x=2;$x<30;$x++){
+                                            ?>
+                                            <option value="<?php echo $x;?>" <?php echo (isset($modelsData['paper']) and $modelsData['paper'] == $x)?'selected':'';?>>試卷<?php echo str_pad($x,2,'0',STR_PAD_LEFT);?></option>
+                                            <?php
+                                        }
+                                        ?>
                                     </select>
                                 </p>
                             </td>
@@ -76,11 +82,14 @@ echo form_open_multipart('modellist/setModelData', $attributes,$hidden);
                         <tr>
                             <td>
                                 <p>請選擇試題：<select name="questions" id="questions" >
-                                        <option value="1">閱讀出題模組</option>
-                                        <option value="2" <?php echo (isset($modelsData['questions']) and $modelsData['questions'] == '2')?'selected':'';?>>搶25遊戲模組</option>
-                                        <option value="3" <?php echo (isset($modelsData['questions']) and $modelsData['questions'] == '3')?'selected':'';?>>思樂冰製作遊戲模組</option>
-                                        <option value="4" <?php echo (isset($modelsData['questions']) and $modelsData['questions'] == '4')?'selected':'';?>>最佳銷售組合遊戲模組</option>
-                                        <option value="5" <?php echo (isset($modelsData['questions']) and $modelsData['questions'] == '5')?'selected':'';?>>數學渡河邏輯遊戲模組</option>
+                                        <option value="1">試題01</option>
+                                        <?php
+                                        for($x=2;$x<30;$x++){
+                                            ?>
+                                            <option value="<?php echo $x;?>" <?php echo (isset($modelsData['questions']) and $modelsData['questions'] == $x)?'selected':'';?>>試題<?php echo str_pad($x,2,'0',STR_PAD_LEFT);?></option>
+                                            <?php
+                                        }
+                                        ?>
                                     </select>
                                 </p>
                             </td>
