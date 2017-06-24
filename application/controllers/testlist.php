@@ -50,7 +50,7 @@ class Testlist extends CI_Controller
             ),
             array(
                 'name' => '問卷列表',
-                'urlDsc' => 'testlist/recordlist/',
+                'urlDsc' => 'questionnaire/listPage/',
             ),
             array(
                 'name' => '試卷教材列表',
