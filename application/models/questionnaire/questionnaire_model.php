@@ -451,4 +451,22 @@ class Questionnaire_model extends CI_Model
         return $t;
     }
 
+
+    /**
+     * 已經有紀錄的問卷數量
+     */
+    public function get_do_quation_num(){
+        $return_array = array();
+        $this -> db -> select('count(*) as total_num');
+        $this -> db -> select('questionnaire_class_num');
+        $this->db->group_by("questionnaire_class_num");
+        $query = $this->db->get('questionnaire_record')->result();
+        foreach ($query as $row) {
+            $return_array[$row->questionnaire_class_num] = $row-> total_num;
+        }
+
+        return $return_array;
+    }
+
+
 }
