@@ -244,7 +244,7 @@ class Questionnaire_model extends CI_Model
             unset($t_array['num']);
             unset($t_array['user_type']);
             unset($t_array['user_num']);
-            $tempArray['ans_data'] = json_encode($t_array);
+            $tempArray['ans_data'] = json_encode($t_array, JSON_UNESCAPED_UNICODE);
             $tempArray['up_date'] = date("Y-m-d H:i", time());
             $this->db->insert('questionnaire_record', $tempArray);
             $this->db->insert_id();
@@ -468,5 +468,29 @@ class Questionnaire_model extends CI_Model
         return $return_array;
     }
 
+    /**
+     * 取得excel需要的問卷資料
+     */
+    public function get_excel_data(){
+        $return_array = array();
+        if(!is_null($this->input_data['num'])){
+            $this -> db -> select('questionnaire_record.up_date');
+            $this -> db -> select('questionnaire_record.ans_data');
+            $this -> db -> select('student_data.c_name');
+            $this -> db -> where('questionnaire_record.questionnaire_class_num', $this->input->get('num'));
+            $this -> db -> order_by('up_date', 'ASC');
+            $this->db->join('student_data', 'student_data.num = questionnaire_record.student_num', 'left');
+            $query = $this->db->get('questionnaire_record')->result();
+            foreach ($query as $row) {
+                $return_array[]  = array(
+                    $row-> c_name,
+                    $row-> up_date,
+                    $row-> ans_data,
+                );
+            }
+        }
+
+        return $return_array;
+    }
 
 }
