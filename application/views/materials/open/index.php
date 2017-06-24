@@ -35,7 +35,13 @@
                     <td width="10%"><?php echo $v['end_date'];?></td>
                     <td width="25%">
                         <!--<a class="button" title="編輯" href="<?php echo  site_url("materials/editOpenPage/");?>?pg=<?php echo $offsetDsc;?>&num=<?php echo $v['num'];?>">編輯</a>-->
-                        <a class="button" title="查看" href="#">查看</a>
+                        <?php
+                        if($v['is_finish'] ==1){
+                        ?>
+                            <a class="button" title="查看" href="<?php echo  site_url("materials/view_data/");?>?num=<?php echo $v['num'];?>">查看</a>
+                        <?php
+                        }
+                        ?>
                         <a class="button" title="刪除" onclick="del('<?php echo $v['num']; ?>')">刪除</a>
                     </td>
                 </tr>
