@@ -252,26 +252,6 @@ class Materials_model extends CI_Model
         }
     }
 
-    /**
-     * 增加 學生作答的試卷教材資料
-     */
-    public function insert_materials_data()
-    {
-        if ($this->input_data['num']) {
-            $tempArray = array();
-            $tempArray['materials_list_num'] = $this->input_data['num'];
-            $tempArray['student_num'] = $this->session->userdata("userID");
-            $t_array = $this->input_data;
-            unset($t_array['num']);
-            unset($t_array['user_type']);
-            unset($t_array['user_num']);
-            $tempArray['ans_data'] = json_encode($t_array);
-            $tempArray['up_date'] = date("Y-m-d H:i", time());
-            $this->db->insert('materials_data', $tempArray);
-            $this->db->insert_id();
-            die();
-        }
-    }
 
     /*
     * 取得試卷教材開放的資料
@@ -387,4 +367,98 @@ class Materials_model extends CI_Model
 
         return 'error';
     }
+
+    /**
+     * 回傳學生尚未完成的試卷教材資料
+     */
+    public function get_not_finish()
+    {
+        $return_data = array();
+        if(!is_null($this->input_data['user_type'])
+            and !is_null($this->input_data['user_num'])
+        )
+        {
+            if($this->input_data['user_type'] == 'student'){
+                $this -> db -> select('materials_student_list.num,materials_student_list.begin_date,materials_student_list.end_date,materials_list.title_dsc');
+                $this -> db -> select('materials_list.can_up_file,materials_list.can_write,materials_list.file_data');
+                $this -> db -> select('materials_list.contents_dsc');
+                $this -> db -> where('materials_student_list.student_num', $this->input_data['user_num']);
+                $this -> db -> where('materials_student_list.is_finish', 0);
+                $this -> db -> where("materials_student_list.end_date >='".date("Y-m-d")."'"  );
+                if(!is_null($this->input_data['num'])){
+                    $this -> db -> where("materials_student_list.num", $this->input_data['num']);
+                }
+                $this->db->join('materials_list', 'materials_list.num = materials_student_list.materials_num', 'left');
+                $query = $this->db->get('materials_student_list')->result();
+                foreach ($query as $v){
+                    $return_data[] = array(
+                        'num' => $v->num,
+                        'begin_date' => $v->begin_date,
+                        'end_date' => $v->end_date,
+                        'title_dsc' => $v->title_dsc,
+                        'contents_dsc' => $v->contents_dsc,
+                        'can_up_file' => $v->can_up_file,
+                        'can_write' => $v->can_write,
+                        'file_data' => json_decode($v->file_data, true),
+                    );
+                }
+            }
+        }
+
+        return $return_data;
+    }
+
+    /**
+     * 增加 學生作答的試卷教材資料
+     */
+    public function insert_materials_data()
+    {
+        if ($this->input_data['num'])
+        {
+            $tempArray = array();
+            $tempArray['materials_list_num'] = $this->input_data['num'];
+            $tempArray['student_num'] =  $this->input_data['user_num'];
+            $tempArray['ans_data'] = $this->input_data['ans_data'];
+            $tempArray['up_date'] = date("Y-m-d H:i", time());
+
+            //設定附件的路徑
+            $upFload = date("Ymd", time());
+            $upFileFload = "./upFILE/materials/".$upFload;
+            $upFile = $upFileFload."/";
+            if (!is_dir($upFileFload)) {      //檢察upload資料夾是否存在
+                if (!mkdir($upFile)) { //不存在的話就創建upload資料夾
+                    //die ("上傳目錄不存在，並且創建失敗");
+                }
+            }
+            $config['upload_path'] = $upFileFload;//以根目錄為起點的位置
+            $config['allowed_types'] = '*';
+            //$config['max_size']	= '100';
+            //$config['max_width']  = '1024';
+            //$config['max_height']  = '768';
+            $config['encrypt_name'] = true;//隨機取名字
+            $this->load->library('upload', $config);
+            // die(var_dump($this->upload->do_upload('up_img') ));
+            if (!$this->upload->do_upload('up_file')) {
+                // $error = array('error' => $this->upload->display_errors());
+            } else {
+                $file_data = array();
+                $getDataArray = $this->upload->data();//取得資訊
+                $t  = array(
+                    'file_path' => $upFload.'/'.$getDataArray['file_name'],
+                    'file_name' => $getDataArray['orig_name'],
+                );
+                $file_data[] = $t;
+                $tempArray['file_data'] = json_encode($file_data);
+            }
+            $this->db->insert('materials_record', $tempArray);
+
+            $tArray = array(
+                'is_finish' => '1'
+            );
+            $this->db->where('num', $this->input_data['num']);
+            $this->db->where('student_num', $this->input_data['user_num']);
+            $this->db->update('materials_student_list', $tArray);
+        }
+    }
+
 }
