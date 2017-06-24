@@ -178,17 +178,6 @@ class Questionnaire extends CI_Controller
         }
     }
 
-    /**
-     * 新增 學生作答的問卷資料
-     */
-    public function insert_data()
-    {
-        $data = $this->input->post();
-        $this -> questionnaire_model ->init($data);
-        $this -> questionnaire_model ->insert_questionnaire_data();
-
-        redirect('/questionnaire/do_page?num='.$data['num']);
-    }
 
     /**
      * 問卷開放時間列表
@@ -453,5 +442,17 @@ class Questionnaire extends CI_Controller
         $this->layout->setLayout('layout/front/questionnaire_layout');//套用樣板
 
         $this->layout->view('questionnaire/student/do_page', $data);
+    }
+
+    /**
+     * 新增 學生作答的問卷資料
+     */
+    public function insert_data()
+    {
+        $data = $this->input->post();
+        $this -> questionnaire_model ->init($data);
+        $this -> questionnaire_model ->insert_questionnaire_data();
+
+        redirect('/questionnaire/listPage');
     }
 }
