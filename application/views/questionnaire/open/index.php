@@ -39,7 +39,7 @@
                         <?php
                         if( isset($do_quation_num[$v['num']])){
                          ?>
-                            <a class="button" title="匯出Excel" href="<?php echo  site_url("questionnaire/getExcel/");?>?num=<?php echo $v['num'];?>" target="_blank">匯出Excel</a>
+                            <a class="button" title="匯出Excel" onclick="OutExcel('<?php echo $v['num'];?>')" href="#">匯出Excel</a>
                         <?php
                         }
                         ?>
@@ -73,5 +73,10 @@
                 }
             });
         }
+    }
+
+    //產生excel
+    function OutExcel(getNum){
+        window.open('<?php echo  site_url('questionnaire/getExcel'); ?>?num='+getNum);
     }
 </script>
