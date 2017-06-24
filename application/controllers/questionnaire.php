@@ -270,6 +270,7 @@ class Questionnaire extends CI_Controller
         }
 
         $data = array();
+        $data['num'] = $this -> input ->get('num');
         $data['base'] = $this->config->item('base_url');
         $data['school'] = null;
         $data['class'] = null;
@@ -279,7 +280,7 @@ class Questionnaire extends CI_Controller
             $data['school'] = $this -> teacherlist_model -> getSchoolData();
             $data['teacher'] = $this -> teacherlist_model -> getListData(array('is_del' => 0));
             $data['class_data'] = $this -> classlist_model -> getListData();
-            $data['q_data'] = $this -> questionnaire_model -> getListData();
+            $data['q_data'] = $this -> questionnaire_model -> getTitleData();
 
             $this->layout->view('questionnaire/open/add_page_root', $data);
         }
@@ -292,7 +293,7 @@ class Questionnaire extends CI_Controller
             $data['school'] = $this -> teacherlist_model -> getSchoolData();
             $data['teacher'] = $this -> teacherlist_model -> getData($this->session->userdata("userID"));
             $data['class_data'] = $this -> classlist_model -> getListData();
-            $data['q_data'] = $this -> questionnaire_model -> getListData($whereArray);
+            $data['q_data'] = $this -> questionnaire_model -> getTitleData();
 
             $this->layout->view('questionnaire/open/add_page_teacher', $data);
         }
