@@ -13,7 +13,10 @@ class Questionnaire extends CI_Controller
         $this->load->model('teacherlist/teacherlist_model');
         $this->load->model('classlist/classlist_model');
         $this->load->model('publicfunction/sqlfunction', 'sqlfunction');
-        if ($this->session->userdata("loginType") == "root" || $this->session->userdata("loginType") == "teacher") {
+        if ($this->session->userdata("loginType") == "root"
+            || $this->session->userdata("loginType") == "teacher"
+            || $this->session->userdata("loginType") == "student"
+        ) {
 
         } else {
             redirect('/memck/logout', 'refresh');
@@ -81,22 +84,6 @@ class Questionnaire extends CI_Controller
         $this->layout->view('questionnaire/index', $data);
     }
 
-    /**
-     * 學生實際填寫問卷
-     */
-    public function do_page()
-    {
-        $this->load->library('layout');//套用樣板為layout_main
-        $data = array();
-        $data['base'] = $this->config->item('base_url');
-        $num = $this->input->get('num');
-        $data['num'] = $num;
-        $this -> questionnaire_model -> init(array('num'=>$num));
-        $data['q_data'] = $this->questionnaire_model-> get_data();
-        $this->layout->setLayout('layout/front/questionnaire_layout');//套用樣板
-
-        $this->layout->view('questionnaire/do_page', $data);
-    }
 
     /**
      * 新增問卷的編輯頁面
@@ -414,5 +401,57 @@ class Questionnaire extends CI_Controller
         }
 
         return  $result;
+    }
+
+    /**
+     * 學生端 問卷列表
+     */
+
+    public function listPage(){
+        $this->load->library('layout');//套用樣板為layout_main
+        $this->layout->setLayout('layout/front/layout');//套用樣板
+
+        $data = array();
+        $data['base'] = $this->config->item('base_url');
+        $data['myName'] = $this->session->userdata("userName");
+        $data['menuList'] = array(
+            array(
+                'name' => '試題列表',
+                'urlDsc' => 'testlist/',
+            ),
+            array(
+                'name' => '問卷列表',
+                'urlDsc' => 'questionnaire/listPage/',
+            ),
+            array(
+                'name' => '試卷教材列表',
+                'urlDsc' => 'materials/listPage/',
+            ),
+        );
+        $t = array(
+            'user_type' => 'student',
+            'user_num' => $this->session->userdata("userID"),
+        );
+        $this -> questionnaire_model -> init($t);
+        $data['list'] = $this -> questionnaire_model -> get_not_finish();
+
+        $this->layout->view('questionnaire/student/index', $data);
+    }
+
+    /**
+     * 學生端 填寫問卷頁面
+     */
+    public function doPage()
+    {
+        $this->load->library('layout');//套用樣板為layout_main
+        $data = array();
+        $data['base'] = $this->config->item('base_url');
+        $num = $this->input->get('num');
+        $data['num'] = $num;
+        $this -> questionnaire_model -> init(array('num'=>$num));
+        $data['q_data'] = $this->questionnaire_model-> get_data();
+        $this->layout->setLayout('layout/front/questionnaire_layout');//套用樣板
+
+        $this->layout->view('questionnaire/student/do_page', $data);
     }
 }
