@@ -96,8 +96,8 @@ function reset_student(){
 function chkValue(){
 	var isGo = true;
 	var err_dsc = '';
-	var ck_array =  ["select_quation","begin_date"];
-	var err_array =  ["請選擇問卷!!","請輸入開放日期!!"];
+	var ck_array =  ["select_class","begin_date"];
+	var err_array =  ["請選擇班級!!","請輸入開放日期!!"];
 	var type_array =  ["text","text"];
 
 	for(var x=0;x< ck_array.length;x++){
@@ -129,6 +129,7 @@ function chkValue(){
             type:"POST",
             data: {
                 materials_num:'<?php echo $materials_num;?>',
+                class_num:$('#select_class').val(),
                 student_num:$('#select_student').val(),
                 begin_date:$('#begin_date').val(),
                 end_date:$('#end_date').val(),
